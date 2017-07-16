@@ -1,16 +1,16 @@
 {
-  "name": "docker-logentries",
-  "version": "0.6.0",
-  "description": "Forward all logs from all running docker containers to Logentries",
+  "name": "r7insight_docker",
+  "version": "0.1.0",
+  "description": "Forward all logs from all running docker containers to Rapid7 InsightOps",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nearform/docker-logentries.git"
+    "url": "https://github.com/rapid7/r7insight_docker.git"
   },
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Matteo Collina <matteo.collina@nearform.com>",
+  "author": "Bart Siniarski <bartlomiej_siniarski@rapid7.com>",
   "license": "MIT",
   "dependencies": {
     "docker-allcontainers": "^0.4.0",
