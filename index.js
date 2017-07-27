@@ -18,7 +18,7 @@ function connect(opts) {
   if (opts.secure) {
     stream = tls.connect(opts.port, opts.region + opts.server, onSecure);
   } else {
-    stream = net.createConnection(opts.port, String(opts.region + opts.server));
+    stream = net.createConnection(opts.port, opts.region + opts.server);
   }
 
   function onSecure() {
@@ -172,7 +172,7 @@ function cli() {
       logstoken: process.env.LOGENTRIES_LOGSTOKEN || process.env.LOGENTRIES_TOKEN,
       statstoken: process.env.LOGENTRIES_STATSTOKEN || process.env.LOGENTRIES_TOKEN,
       eventstoken: process.env.LOGENTRIES_EVENTSTOKEN || process.env.LOGENTRIES_TOKEN,
-      server: String('.data.logs.insight.rapid7.com'),
+      server: '.data.logs.insight.rapid7.com',
       port: unbound
     }
   });
