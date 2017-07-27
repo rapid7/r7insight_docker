@@ -1,35 +1,35 @@
-# docker-logentries
+# r7insight_docker
 
-Forward all your logs to [Logentries](https://logentries.com), like a breeze.
+Forward all your logs to [Rapid7 InsightOps](https://www.rapid7.com/products/insightops/), like a breeze.
 
 ![logentries dashboard](https://raw.githubusercontent.com/nearform/docker-logentries/master/dashboard.png)
 
-See the Logentries community pack at [http://revelops.com/community/packs/docker/](http://revelops.com/community/packs/docker/).
+You can download the community pack created by Logentries at [https://logentries.com/resources/packs/docker/](https://logentries.com/resources/packs/docker/). The community pack comes with pre-defined out-of-the-box alerts and widgets to get you started.
 
 ## Usage as a Container
 
-The simplest way to forward all your container's log to Logentries is to
+The simplest way to forward all your container's log to Rapid7 InsightOps is to
 run this repository as a container, with:
 
 ```sh
-docker run -v /var/run/docker.sock:/var/run/docker.sock logentries/docker-logentries -t <TOKEN> -j -a host=`uname -n`
+docker run -v /var/run/docker.sock:/var/run/docker.sock rapid7/r7insight_docker -t <TOKEN> -r <REGION> -j -a host=`uname -n`
 ```
 
 You can also use different tokens for logging, stats and events:
 ```sh
-docker run -v /var/run/docker.sock:/var/run/docker.sock logentries/docker-logentries -l <LOGSTOKEN> -k <STATSTOKEN> -e <EVENTSTOKEN> -j -a host=`uname -n`
+docker run -v /var/run/docker.sock:/var/run/docker.sock rapid7/r7insight_docker -l <LOGSTOKEN> -k <STATSTOKEN> -e <EVENTSTOKEN> -r <REGION> -j -a host=`uname -n`
 ```
 
 You can pass the `--no-stats` flag if you do not want stats to be
-published to Logentries every second. You __need this flag for Docker
+published to Rapid7 InsightOps every second. You __need this flag for Docker
 version < 1.5__.
 
-You can pass the `--no-logs` flag if you do not want logs to be published to Logentries.
+You can pass the `--no-logs` flag if you do not want logs to be published to Rapid7 InsightOps.
 
 You can pass the `--no-dockerEvents` flag if you do not want events to be
-published to Logentries.
+published to Rapid7 InsightOps.
 
-The `-i/--statsinterval <STATSINTERVAL>` downsamples the logs sent to Logentries. It collects samples and averages them before sending to Logentries.
+The `-i/--statsinterval <STATSINTERVAL>` downsamples the logs sent to Rapid7 InsightOps. It collects samples and averages them before sending to Rapid7 InsightOps.
 
 If you don't use `-a` a default ``host=`uname -n` `` value will be added.
 
@@ -47,30 +47,34 @@ To run the container in such environments add --privileged to the `docker run` c
 
 Example:
 ```sh
-docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock logentries/docker-logentries -t <TOKEN> -j -a host=`uname -n`
+docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock rapid7/r7insight_docker -t <TOKEN> -r <REGION> -j -a host=`uname -n`
 ```
 
 ## Usage as a CLI
 
 1. `npm install docker-logentries -g`
-2. `docker-logentries -t TOKEN -a host=\`uname -n\``
-3. ..there is no step 3
+2. `docker-logentries -t TOKEN -r REGION -a host=\`uname -n\``
+
+
+You have to specify TOKEN by passing `-t TOKEN`
+
+You have to specify REGION by passing `-r REGION`. Region is mandatory.
 
 You can also pass the `-j` switch if you log in JSON format, like
 [bunyan](http://npm.im/bunyan).
 
 You can pass the `--no-stats` flag if you do not want stats to be
-published to Logentries every second.
+published to Rapid7 InsightOps every second.
 
-You can pass the `--no-logs` flag if you do not want logs to be published to Logentries.
+You can pass the `--no-logs` flag if you do not want logs to be published to Rapid7 InsightOps.
 
 You can pass the `--no-dockerEvents` flag if you do not want events to be
-published to Logentries.
+published to Rapid7 InsightOps.
 
 The `-a/--add` flag allows to add fixed values to the data being
 published. This follows the format 'name=value'.
 
-The `-i/--statsinterval` downsamples the logs sent to Logentries. It collects samples and averages them before sending to Logentries.
+The `-i/--statsinterval` downsamples the logs sent to Rapid7 InsightOps. It collects samples and averages them before sending to Rapid7 InsightOps.
 
 You can also filter the containers for which the logs/stats are
 forwarded with:
@@ -117,10 +121,10 @@ setTimeout(function() {
 First clone this repository, then:
 
 ```bash
-docker build -t logentries .
-docker run -v /var/run/docker.sock:/var/run/docker.sock logentries -t <TOKEN> -j -a host=`uname -n`
+docker build -t r7insight_docker .
+docker run -v /var/run/docker.sock:/var/run/docker.sock r7insight_docker -t <TOKEN> -r <REGION> -j -a host=`uname -n`
 ```
-### Using Make - the official nodejs onbuild image 
+### Using Make - the official nodejs onbuild image
 ```bash
 export BUILD_TYPE=node-onbuild
 make build

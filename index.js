@@ -16,9 +16,9 @@ var os = require('os');
 function connect(opts) {
   var stream;
   if (opts.secure) {
-    stream = tls.connect(opts.port, opts.server, onSecure);
+    stream = tls.connect(opts.port, opts.region + opts.server, onSecure);
   } else {
-    stream = net.createConnection(opts.port, opts.server);
+    stream = net.createConnection(opts.port, opts.region + opts.server);
   }
 
   function onSecure() {
@@ -31,6 +31,7 @@ function connect(opts) {
 
 
 function start(opts) {
+
   var logsToken = opts.logstoken || opts.token;
   var statsToken = opts.statstoken || opts.token;
   var eventsToken = opts.eventstoken || opts.token;
@@ -146,9 +147,10 @@ var unbound;
 function cli() {
   var argv = minimist(process.argv.slice(2), {
     boolean: ['json', 'secure', 'stats', 'logs', 'dockerEvents'],
-    string: ['token', 'logstoken', 'statstoken', 'eventstoken', 'server', 'port'],
+    string: ['token', 'region', 'logstoken', 'statstoken', 'eventstoken', 'server', 'port'],
     alias: {
       'token': 't',
+      'region': 'r',
       'logstoken': 'l',
       'newline': 'n',
       'statstoken': 'k',
@@ -170,14 +172,17 @@ function cli() {
       logstoken: process.env.LOGENTRIES_LOGSTOKEN || process.env.LOGENTRIES_TOKEN,
       statstoken: process.env.LOGENTRIES_STATSTOKEN || process.env.LOGENTRIES_TOKEN,
       eventstoken: process.env.LOGENTRIES_EVENTSTOKEN || process.env.LOGENTRIES_TOKEN,
-      server: 'data.logentries.com',
+      server: '.data.logs.insight.rapid7.com',
       port: unbound
     }
   });
 
-  if (argv.help || !(argv.token || argv.logstoken || argv.statstoken || argv.eventstoken)) {
-    console.log('Usage: docker-logentries [-l LOGSTOKEN] [-k STATSTOKEN] [-e EVENTSTOKEN]\n' +
+
+
+  if (argv.help || !(argv.token || argv.logstoken || argv.statstoken || argv.eventstoken) || !(argv.region)) {
+    console.log('Usage: r7insight_docker [-l LOGSTOKEN] [-k STATSTOKEN] [-e EVENTSTOKEN]\n' +
                 '                         [-t TOKEN] [--secure] [--json]\n' +
+                '                         [-r REGION]\n' +
                 '                         [--no-newline] [--no-stats] [--no-logs] [--no-dockerEvents]\n' +
                 '                         [-i STATSINTERVAL] [-a KEY=VALUE]\n' +
                 '                         [--matchByImage REGEXP] [--matchByName REGEXP]\n' +
