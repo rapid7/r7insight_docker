@@ -18,7 +18,7 @@ function connect(opts) {
   if (opts.secure) {
     stream = tls.connect(opts.port, opts.region + opts.server, onSecure);
   } else {
-    stream = net.createConnection(opts.port, opts.region + opts.server);
+    stream = net.createConnection(opts.port, String(opts.region + opts.server));
   }
 
   function onSecure() {
@@ -172,7 +172,7 @@ function cli() {
       logstoken: process.env.LOGENTRIES_LOGSTOKEN || process.env.LOGENTRIES_TOKEN,
       statstoken: process.env.LOGENTRIES_STATSTOKEN || process.env.LOGENTRIES_TOKEN,
       eventstoken: process.env.LOGENTRIES_EVENTSTOKEN || process.env.LOGENTRIES_TOKEN,
-      server: '.data.logs.insight.rapid7.com',
+      server: String('.data.logs.insight.rapid7.com'),
       port: unbound
     }
   });
@@ -180,7 +180,7 @@ function cli() {
 
 
   if (argv.help || !(argv.token || argv.logstoken || argv.statstoken || argv.eventstoken) || !(argv.region)) {
-    console.log('Usage: docker-logentries [-l LOGSTOKEN] [-k STATSTOKEN] [-e EVENTSTOKEN]\n' +
+    console.log('Usage: r7insight_docker [-l LOGSTOKEN] [-k STATSTOKEN] [-e EVENTSTOKEN]\n' +
                 '                         [-t TOKEN] [--secure] [--json]\n' +
                 '                         [-r REGION]\n' +
                 '                         [--no-newline] [--no-stats] [--no-logs] [--no-dockerEvents]\n' +
