@@ -1,15 +1,11 @@
 # docker-logentries
-#
-# VERSION 0.2.0
 
 FROM node:0.12-onbuild
-MAINTAINER Rapid 7 - Logentries <support@logentries.com>
+LABEL maintainer="Rapid 7 - Logentries <support@logentries.com>"
 
 WORKDIR /usr/src/app
-COPY package.json package.json
-RUN npm install --production
-COPY index.js /usr/src/app/index.js
-COPY VERSION .
+COPY package.json index.js VERSION ./
+RUN npm install --production && npm cache clean
 
 ENTRYPOINT ["/usr/src/app/index.js"]
 CMD []

@@ -1,17 +1,12 @@
 # docker-logentries
-#
-# VERSION 1.0.0
 
 FROM mhart/alpine-node:5.10.1
-MAINTAINER Rapid 7 - Logentries <support@logentries.com>
+LABEL maintainer="Rapid 7 - Logentries <support@logentries.com>"
 RUN apk add --no-cache bash
 
 WORKDIR /usr/src/app
-COPY package.json package.json
-RUN npm install --production
-RUN npm cache clean
-COPY index.js /usr/src/app/index.js
-COPY VERSION .
+COPY package.json index.js VERSION ./
+RUN npm install --production && npm cache clean
 
 ENTRYPOINT ["/usr/src/app/index.js"]
 CMD []
