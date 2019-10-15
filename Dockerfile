@@ -9,6 +9,7 @@ WORKDIR /usr/src/app
 COPY package.json package.json
 RUN npm install --production
 COPY index.js /usr/src/app/index.js
+COPY VERSION .
 
 ENTRYPOINT ["/usr/src/app/index.js"]
 CMD []

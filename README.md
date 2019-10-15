@@ -2,7 +2,7 @@
 
 Forward all your logs to [Rapid7 InsightOps](https://www.rapid7.com/products/insightops/), like a breeze.
 
-![logentries dashboard](https://raw.githubusercontent.com/nearform/docker-logentries/master/dashboard.png)
+![logentries dashboard](https://raw.githubusercontent.com/rapid7/r7insight_docker/master/dashboard.png)
 
 You can download the community pack created by Logentries at [https://logentries.com/resources/packs/docker/](https://logentries.com/resources/packs/docker/). The community pack comes with pre-defined out-of-the-box alerts and widgets to get you started.
 
@@ -42,7 +42,7 @@ forwarded with:
 * `--skipByImage REGEXP`: do not forward logs/stats for the containers whose image matches the given REGEXP.
 
 ### Running container in a restricted environment.
-Some environments(such as Google Compute Engine) does not allow to access the docker socket without special privileges. You will get EACCES(`Error: read EACCES`) error if you try to run the container.
+Some environments(such as Google Compute Engine) does not allow to access the Docker socket without special privileges. You will get EACCES(`Error: read EACCES`) error if you try to run the container.
 To run the container in such environments add --privileged to the `docker run` command.
 
 Example:
@@ -52,8 +52,8 @@ docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock rapid7/r7in
 
 ## Usage as a CLI
 
-1. `npm install docker-logentries -g`
-2. `docker-logentries -t TOKEN -r REGION -a host=\`uname -n\``
+1. `npm install r7insight_docker -g`
+2. `r7insight_docker -t TOKEN -r REGION -a host=\`uname -n\``
 
 
 You have to specify TOKEN by passing `-t TOKEN`
@@ -86,12 +86,12 @@ forwarded with:
 
 ## Embedded usage
 
-Install it with: `npm install docker-logentries --save`
+Install it with: `npm install r7insight_docker --save`
 
 Then, in your JS file:
 
 ```
-var logentries = require('docker-logentries')({
+var logentries = require('r7insight_docker')({
   json: false, // or true to parse lines as JSON
   secure: true, // or false to connect over plain TCP
   token: process.env.TOKEN, // logentries TOKEN
@@ -115,9 +115,9 @@ setTimeout(function() {
 }, 5000)
 ```
 
-## Building a docker repo from this repository
+## Building a Docker repo from this repository
 
-### Using the plain docker file
+### Using the plain Docker file
 First clone this repository, then:
 
 ```bash
@@ -132,7 +132,7 @@ make test
 make tag
 ```
 
-### Using Make - the alpine linx build (~42Mb)
+### Using Make - the alpine linux build (~42Mb)
 ```bash
 export BUILD_TYPE=alpine-node
 make build
@@ -140,12 +140,16 @@ make test
 make tag
 ```
 
-### Pushing to your own repo
+### Pushing to your own Docker repository
 After you've build, tested, tagged it locally
 ```bash
-export DOCKER_REGISTRY_PREFIX=you-dockerhub-user/yourimage-name
+export DOCKER_REGISTRY_PREFIX=<your-dockerhub-user>/<your-image-name>
 make push
 ```
+
+### Publishing your own node package
+- Update **package.json** depending on your requirements
+- `make publish`
 
 ## How it works
 
