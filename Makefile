@@ -3,12 +3,12 @@ NODE_VERSION ?=$(shell grep FROM Dockerfile | cut -d ':' -f 2| cut -d '-' -f 1)
 # We support two build modes , node-onbuild or alpine-node
 BUILD_TYPE ?=node-onbuild
 
-NAME_CONTAINER ?=r7insight_docker
-NAME_BUILD_CONTAINER ?=$(NAME_CONTAINER)-build-$(BUILD_TYPE)
-NAME_TEST_CONTAINER ?=$(NAME_CONTAINER)-test-$(BUILD_TYPE)
-NAME_EXPORT_CONTAINER ?=$(NAME_CONTAINER)-export-$(BUILD_TYPE)
+NAME ?=r7insight_docker
+NAME_BUILD_CONTAINER ?=$(NAME)-build-$(BUILD_TYPE)
+NAME_TEST_CONTAINER ?=$(NAME)-test-$(BUILD_TYPE)
+NAME_EXPORT_CONTAINER ?=$(NAME)-export-$(BUILD_TYPE)
 
-DOCKER_REGISTRY_PREFIX ?=rapid7/$(NAME_CONTAINER)
+DOCKER_REGISTRY_PREFIX ?=rapid7/$(NAME)
 DOCKER_REGISTRY_IMAGE_VERSION ?=$(shell cat VERSION)
 
 # Use the alpine node 
