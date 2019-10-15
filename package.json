@@ -6,6 +6,7 @@
     "type": "git",
     "url": "https://github.com/rapid7/r7insight_docker.git"
   },
+  "readme": "see [README.md](https://github.com/rapid7/r7insight_docker/blob/master/README.md)",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
