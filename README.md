@@ -42,7 +42,7 @@ forwarded with:
 * `--skipByImage REGEXP`: do not forward logs/stats for the containers whose image matches the given REGEXP.
 
 ### Running container in a restricted environment.
-Some environments(such as Google Compute Engine) does not allow to access the docker socket without special privileges. You will get EACCES(`Error: read EACCES`) error if you try to run the container.
+Some environments(such as Google Compute Engine) does not allow to access the Docker socket without special privileges. You will get EACCES(`Error: read EACCES`) error if you try to run the container.
 To run the container in such environments add --privileged to the `docker run` command.
 
 Example:
@@ -115,9 +115,9 @@ setTimeout(function() {
 }, 5000)
 ```
 
-## Building a docker repo from this repository
+## Building a Docker repo from this repository
 
-### Using the plain docker file
+### Using the plain Docker file
 First clone this repository, then:
 
 ```bash
@@ -140,7 +140,7 @@ make test
 make tag
 ```
 
-### Pushing to your own docker repository
+### Pushing to your own Docker repository
 After you've build, tested, tagged it locally
 ```bash
 export DOCKER_REGISTRY_PREFIX=<your-dockerhub-user>/<your-image-name>

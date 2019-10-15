@@ -27,17 +27,17 @@ WAIT_TIME ?=5
 .PHONY: default build test tag push publish bump-major bump-minor bump-patch export clean help
 default: help
 
-build: ## Builds a new docker image
+build: ## Builds a new Docker image
 	echo $(BUILD_TYPE)
 	echo $(DOCKERFILE_SUFFIX)
 	@echo "[build] Building new image"
 	docker build --rm=true --tag=$(NAME_BUILD_CONTAINER) -f Dockerfile$(DOCKERFILE_SUFFIX) . 
 
-test: ## Tests a previous build docker image to see if starts
+test: ## Tests a previous build Docker image to see if starts
 	@echo "[test] Removing existing test container if any"
 	@docker rm -f $(NAME_TEST_CONTAINER) > /dev/null 2>&1 || true
 	@echo "[test] Starting a test container"
-	@#	Ensure docker image exists
+	@#	Ensure Docker image exists
 	@docker images | grep -q "$(NAME_BUILD_CONTAINER)" || \
 		(echo "[test] Docker image not found, run 'make test'" && false)
 	@docker run -d --name=$(NAME_TEST_CONTAINER) \
@@ -50,11 +50,11 @@ test: ## Tests a previous build docker image to see if starts
 	@echo "[test] Cleaning up test container $(NAME_TEST_CONTAINER)"
 	@docker rm -f $(NAME_TEST_CONTAINER) > /dev/null 2>&1 || true
 
-tag: ## Tags local build image to make it ready for push to docker registry
+tag: ## Tags local build image to make it ready for push to Docker registry
 	docker tag "$(shell docker images -q ${NAME_BUILD_CONTAINER})" "${DOCKER_REGISTRY_PREFIX}:${DOCKER_REGISTRY_IMAGE_TAG_PREFIX}${DOCKER_REGISTRY_IMAGE_VERSION}"
 	docker tag "$(shell docker images -q ${NAME_BUILD_CONTAINER})" "${DOCKER_REGISTRY_PREFIX}:${DOCKER_REGISTRY_IMAGE_TAG_PREFIX}latest"
 
-push: ## Push local versioned and latest images to the docker registry
+push: ## Push local versioned and latest images to the Docker registry
 	docker push "$(DOCKER_REGISTRY_PREFIX):$(DOCKER_REGISTRY_IMAGE_TAG_PREFIX)$(DOCKER_REGISTRY_IMAGE_VERSION)"
 	docker push "$(DOCKER_REGISTRY_PREFIX):$(DOCKER_REGISTRY_IMAGE_TAG_PREFIX)latest"
 
@@ -93,7 +93,7 @@ export: ## Export the build as a tarball
 	docker create --name $(NAME_EXPORT_CONTAINER) $(NAME_BUILD_CONTAINER)
 	docker export -o "logentries-${DOCKER_REGISTRY_IMAGE_TAG_PREFIX}${DOCKER_REGISTRY_IMAGE_VERSION}.tar" `docker ps -a -q -f 'name=$(NAME_EXPORT_CONTAINER)'`
 
-clean: ## Remove docker images from build and tag commands
+clean: ## Remove Docker images from build and tag commands
 	@#	This expands to 3 images, build, latest versioned (0.9.0) and latest
 	-docker image rm "${NAME_BUILD_CONTAINER}" ${DOCKER_REGISTRY_PREFIX}:${DOCKER_REGISTRY_IMAGE_TAG_PREFIX}{${DOCKER_REGISTRY_IMAGE_VERSION},latest}
 

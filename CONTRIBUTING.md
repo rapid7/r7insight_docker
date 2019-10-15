@@ -9,7 +9,7 @@
 - Work on functionality
 - `make build` for building the Docker image
 - `make test` for testing the built image
-- `make clean` for removing the built docker image and its tags
+- `make clean` for removing the built Docker image and its tags
 
 Once you have finished implementing the desired functionality, you should open a Pull Request on GitHub  
 Once it is approved for merging, you should bump the versioning (this repository uses [SemVer](https://semver.org/)) by running whichever one of the following that makes sense:
@@ -28,6 +28,6 @@ You should do the following for both the alpine and onbuild base:
 - `make build`
 - `make test`
 - `make tag`
-- `make push` (docker image push, will require your account credentials)
+- `make push` (Docker image push, will require your account credentials)
 - `make publish` (npm package publish, will require account credentials, update **package.json** if needed)
-- `make clean` (optional for local docker image cleanup)
+- `make clean` (optional for local Docker image cleanup)
