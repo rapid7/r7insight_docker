@@ -9,10 +9,10 @@
 - Work on functionality
 - `make build` for building the Docker image
 - `make test` for testing the built image
-- `make clean` for removing the built docker image and it's tags
+- `make clean` for removing the built docker image and its tags
 
 Once you have finished implementing the desired functionality, you should open a Pull Request on GitHub  
-Once it is approved for merging, you should bump the versioning (this repository uses [SemVer](https://semver.org/)) running by whichover one of the following that makes sense:
+Once it is approved for merging, you should bump the versioning (this repository uses [SemVer](https://semver.org/)) by running whichever one of the following that makes sense:
 - `make bump-major`
 - `make bump-minor`
 - `make bump-patch`
