@@ -2,9 +2,9 @@
 
 Forward all your logs to [Rapid7 InsightOps](https://www.rapid7.com/products/insightops/), like a breeze.
 
-![logentries dashboard](https://raw.githubusercontent.com/rapid7/r7insight_docker/master/dashboard.png)
+![InsightOps dashboard](https://raw.githubusercontent.com/rapid7/r7insight_docker/master/dashboard.png)
 
-You can download the community pack created by Logentries at [https://logentries.com/resources/packs/docker/](https://logentries.com/resources/packs/docker/). The community pack comes with pre-defined out-of-the-box alerts and widgets to get you started.
+You can download the community pack created by InsightOps at [Docker pack](https://insightops.help.rapid7.com/docs/docker). The community pack comes with pre-defined out-of-the-box alerts and widgets to get you started.
 
 ## Usage as a Container
 
