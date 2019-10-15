@@ -65,6 +65,7 @@ bump-major: ## Bump the major version (1.0.0 -> 2.0.0)
 	@echo "New version: ${DOCKER_REGISTRY_IMAGE_VERSION}"
 	@git add VERSION package.json
 	@git commit -m "Bump version to ${DOCKER_REGISTRY_IMAGE_VERSION}"
+	@git tag -a "${DOCKER_REGISTRY_IMAGE_VERSION}" -m "Releasing version ${DOCKER_REGISTRY_IMAGE_VERSION}"
 
 bump-minor: ## Bump the minor version (0.1.0 -> 0.2.0)
 	@echo "Current version: ${DOCKER_REGISTRY_IMAGE_VERSION}"
@@ -74,6 +75,7 @@ bump-minor: ## Bump the minor version (0.1.0 -> 0.2.0)
 	@echo "New version: ${DOCKER_REGISTRY_IMAGE_VERSION}"
 	@git add VERSION package.json
 	@git commit -m "Bump version to ${DOCKER_REGISTRY_IMAGE_VERSION}"
+	@git tag -a "${DOCKER_REGISTRY_IMAGE_VERSION}" -m "Releasing version ${DOCKER_REGISTRY_IMAGE_VERSION}"
 
 bump-patch: ## Bump the patch version (0.0.1 -> 0.0.2)
 	@echo "Current version: ${DOCKER_REGISTRY_IMAGE_VERSION}"
@@ -83,6 +85,7 @@ bump-patch: ## Bump the patch version (0.0.1 -> 0.0.2)
 	@echo "New version: ${DOCKER_REGISTRY_IMAGE_VERSION}"
 	@git add VERSION package.json
 	@git commit -m "Bump version to ${DOCKER_REGISTRY_IMAGE_VERSION}"
+	@git tag -a "${DOCKER_REGISTRY_IMAGE_VERSION}" -m "Releasing version ${DOCKER_REGISTRY_IMAGE_VERSION}"
 
 export: ## Export the build as a tarball
 	-docker rm -f "${NAME_EXPORT_CONTAINER}"

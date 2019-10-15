@@ -17,7 +17,8 @@ Once it is approved for merging, you should bump the versioning (this repository
 - `make bump-minor`
 - `make bump-patch`
 
-Push the bump commit into the GitHub PR.
+Push the bump commit into the GitHub PR.  
+**Please ensure to push tags as well: `git push --tags` IF you do not `followTags = true` in your ~/.gitconfig**  
 At this stage, the Rapid7 team should approve, merge and deploy the new package.
 
 ## Deployment/Publishing
