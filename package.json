@@ -10,7 +10,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Bart Siniarski <bartlomiej_siniarski@rapid7.com>",
+  "author": "Szymon Bialkowski <szymon_bialkowski@rapid7.com>",
   "license": "MIT",
   "dependencies": {
     "docker-allcontainers": "^0.4.0",
