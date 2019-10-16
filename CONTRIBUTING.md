@@ -30,5 +30,10 @@ You should do the following for both the alpine and onbuild base:
 - `make test`
 - `make tag`
 - `make push` (Docker image push, will require your account credentials)
-- `make publish` (npm package publish, will require account credentials, update **package.json** if needed)
 - `make clean` (optional for local Docker image cleanup)
+
+You only need to do the following once:
+- `make publish` (npm package publish, will require account credentials, update **package.json** if needed)
+
+
+That's it! Keep in mind that if you changed the **README.md** you will also need to update it manually on Docker Hub.  
