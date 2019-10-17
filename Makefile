@@ -32,25 +32,30 @@ build: ## Builds a new Docker image
 	docker build --rm=true --tag="${NAME_BUILD_CONTAINER}" -f "Dockerfile${DOCKERFILE_SUFFIX}" .
 
 unit-test: ## Run the unit tests
+	@echo "[test] Building and running unit tests"
 	@docker build -t "${NAME_UNITTEST}" -f tests/Dockerfile .
 	@docker run --rm --name "${NAME_UNITTEST}" "${NAME_UNITTEST}"
 
 start-test: ## Tests a previous build Docker image to see if starts
 	@echo "[test] Removing existing test container if any"
-	@docker rm -f "${NAME_TEST_CONTAINER}" > /dev/null 2>&1 || true
+	@-docker rm -f "${NAME_TEST_CONTAINER}" &>/dev/null
 	@echo "[test] Starting a test container"
 	@#	Ensure Docker image exists
 	@docker images | grep -q "${NAME_BUILD_CONTAINER}" || \
 		(echo "[test] Docker image not found, running 'make build'" && make build)
 	@docker run -d --name="${NAME_TEST_CONTAINER}" \
 		-v /var/run/docker.sock:/var/run/docker.sock \
-       	"${NAME_BUILD_CONTAINER}" -t "${INSIGHTOPSTOKEN}" -j -a host="${NAME_TEST_CONTAINER}"  > /dev/null 2>&1
+       	"${NAME_BUILD_CONTAINER}" -t "${INSIGHTOPSTOKEN}" -r us -a host="${NAME_TEST_CONTAINER}" &>/dev/null
 	@echo "[test] Testing if the container stays running"
 	@echo "[test] Waiting for ${WAIT_TIME} seconds"
 	@sleep "${WAIT_TIME}"
-	@docker ps | grep "${NAME_TEST_CONTAINER}" | wc -l
+	@#	If container name doesn't exist, echo, and remove the container
+	@docker ps | grep -q "${NAME_TEST_CONTAINER}" || \
+		(echo "[test] Container exited and failed." && \
+		 (docker rm -f "${NAME_TEST_CONTAINER}" &>/dev/null && \
+		 false))
 	@echo "[test] Cleaning up test container ${NAME_TEST_CONTAINER}"
-	@docker rm -f "${NAME_TEST_CONTAINER}" > /dev/null 2>&1 || true
+	@-docker rm -f "${NAME_TEST_CONTAINER}" &>/dev/null
 
 test: unit-test start-test ## Run all tests
 

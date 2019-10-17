@@ -222,12 +222,12 @@ function cli(process_args) {
   utils.start(argv);
 }
 
-const utils = {
-  start
+var utils = {
+  start: start,
 }
 module.exports = {
-  cli,
-  utils
+  cli: cli,
+  utils: utils,
 }
 
 if (require.main === module) {
