@@ -169,10 +169,10 @@ function cli(process_args) {
       dockerEvents: true,
       statsinterval: 30,
       add: [ 'host=' + os.hostname() ],
-      token: process.env.INSIGHTOPS_TOKEN,
-      logstoken: process.env.INSIGHTOPS_LOGSTOKEN || process.env.INSIGHTOPS_TOKEN,
-      statstoken: process.env.INSIGHTOPS_STATSTOKEN || process.env.INSIGHTOPS_TOKEN,
-      eventstoken: process.env.INSIGHTOPS_EVENTSTOKEN || process.env.INSIGHTOPS_TOKEN,
+      token: process.env.LOGENTRIES_TOKEN,
+      logstoken: process.env.LOGENTRIES_LOGSTOKEN || process.env.LOGENTRIES_TOKEN,
+      statstoken: process.env.LOGENTRIES_STATSTOKEN || process.env.LOGENTRIES_TOKEN,
+      eventstoken: process.env.LOGENTRIES_EVENTSTOKEN || process.env.LOGENTRIES_TOKEN,
       server: '.data.logs.insight.rapid7.com',
       port: unbound
     }
