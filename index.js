@@ -162,6 +162,7 @@ function cli(process_args) {
     },
     default: {
       json: false,
+      secure: true,
       newline: true,
       stats: true,
       logs: true,
@@ -181,7 +182,7 @@ function cli(process_args) {
 
   if (argv.help || !(argv.token || argv.logstoken || argv.statstoken || argv.eventstoken) || !(argv.region)) {
     console.log('Usage: r7insight_docker [-l LOGSTOKEN] [-k STATSTOKEN] [-e EVENTSTOKEN]\n' +
-                '                         [-t TOKEN] [--secure] [--json]\n' +
+                '                         [-t TOKEN] [--no-secure] [--json]\n' +
                 '                         [-r REGION]\n' +
                 '                         [--no-newline] [--no-stats] [--no-logs] [--no-dockerEvents]\n' +
                 '                         [-i STATSINTERVAL] [-a KEY=VALUE]\n' +
