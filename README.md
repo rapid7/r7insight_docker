@@ -91,10 +91,10 @@ Install it with: `npm install r7insight_docker --save`
 Then, in your JS file:
 
 ```
-var logentries = require('r7insight_docker')({
+var insightops = require('r7insight_docker')({
   json: false, // or true to parse lines as JSON
   secure: true, // or false to connect over plain TCP
-  token: process.env.TOKEN, // logentries TOKEN
+  token: process.env.TOKEN, // insightops TOKEN
   newline: true, // Split on newline delimited entries
   stats: true, // disable stats if false
   add: null, // an object whose properties will be added
@@ -107,11 +107,11 @@ var logentries = require('r7insight_docker')({
   skipByImage: /.*dockerfile.*/ //optional
 })
 
-// logentries is the source stream with all the
+// insightops is the source stream with all the
 // log lines
 
 setTimeout(function() {
-  logentries.destroy()
+  insightops.destroy()
 }, 5000)
 ```
 

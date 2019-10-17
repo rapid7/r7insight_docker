@@ -19,7 +19,7 @@ ifeq (${BUILD_TYPE},alpine-node)
 endif
 
 # Just a random token
-LOGENTRIES_TOKEN ?=XAXAXAXAXA
+INSIGHTOPSTOKEN ?=XAXAXAXAXA
 WAIT_TIME ?=5
 
 .PHONY: default build unit-test start-test test tag push publish bump-major \
@@ -33,7 +33,7 @@ build: ## Builds a new Docker image
 
 unit-test: ## Run the unit tests
 	@docker build -t "${NAME_UNITTEST}" -f tests/Dockerfile .
-	@docker run --rm --name "${NAME_UNITTEST}" "${NAME_UNITTEST}" 
+	@docker run --rm --name "${NAME_UNITTEST}" "${NAME_UNITTEST}"
 
 start-test: ## Tests a previous build Docker image to see if starts
 	@echo "[test] Removing existing test container if any"
@@ -44,7 +44,7 @@ start-test: ## Tests a previous build Docker image to see if starts
 		(echo "[test] Docker image not found, run 'make build'" && false)
 	@docker run -d --name="${NAME_TEST_CONTAINER}" \
 		-v /var/run/docker.sock:/var/run/docker.sock \
-  		"${NAME_BUILD_CONTAINER}" -t "${LOGENTRIES_TOKEN}" -j -a host="${NAME_TEST_CONTAINER}"  > /dev/null 2>&1
+       	"${NAME_BUILD_CONTAINER}" -t "${INSIGHTOPSTOKEN}" -j -a host="${NAME_TEST_CONTAINER}"  > /dev/null 2>&1
 	@echo "[test] Testing if the container stays running"
 	@echo "[test] Waiting for ${WAIT_TIME} seconds"
 	@sleep "${WAIT_TIME}"
