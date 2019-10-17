@@ -41,7 +41,7 @@ start-test: ## Tests a previous build Docker image to see if starts
 	@echo "[test] Starting a test container"
 	@#	Ensure Docker image exists
 	@docker images | grep -q "${NAME_BUILD_CONTAINER}" || \
-		(echo "[test] Docker image not found, run 'make build'" && false)
+		(echo "[test] Docker image not found, running 'make build'" && make build)
 	@docker run -d --name="${NAME_TEST_CONTAINER}" \
 		-v /var/run/docker.sock:/var/run/docker.sock \
        	"${NAME_BUILD_CONTAINER}" -t "${INSIGHTOPSTOKEN}" -j -a host="${NAME_TEST_CONTAINER}"  > /dev/null 2>&1
@@ -104,7 +104,8 @@ export: ## Export the build as a tarball
 
 clean: ## Remove Docker images from build and tag commands
 	@#	This expands to 3 images, build, latest versioned (0.9.0) and latest
-	-docker image rm "${NAME_BUILD_CONTAINER}" ${DOCKER_REGISTRY_PREFIX}:{${DOCKER_REGISTRY_IMAGE_VERSION},latest}${DOCKER_REGISTRY_IMAGE_TAG_PREFIX}
+	-docker image rm "${NAME_BUILD_CONTAINER}" ${DOCKER_REGISTRY_PREFIX}:{${DOCKER_REGISTRY_IMAGE_VERSION},latest}${DOCKER_REGISTRY_IMAGE_TAG_PREFIX} \
+                     "${NAME_UNITTEST}"
 
 help: ## Shows help
 	@echo "================================================================================================="
