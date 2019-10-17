@@ -9,7 +9,7 @@
   "readme": "see [README.md](https://github.com/rapid7/r7insight_docker/blob/master/README.md)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "make test"
   },
   "author": "Rapid7 <InsightOpsTeam@rapid7.com>",
   "license": "MIT",
@@ -22,5 +22,8 @@
     "end-of-stream": "^1.1.0",
     "minimist": "^1.1.1",
     "through2": "^0.6.5"
+  },
+  "devDependencies": {
+    "sinon": "7.5.0"
   }
 }

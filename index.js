@@ -144,8 +144,8 @@ function start(opts) {
 
 var unbound;
 
-function cli() {
-  var argv = minimist(process.argv.slice(2), {
+function cli(process_args) {
+  var argv = minimist(process_args.slice(2), {
     boolean: ['json', 'secure', 'stats', 'logs', 'dockerEvents'],
     string: ['token', 'region', 'logstoken', 'statstoken', 'eventstoken', 'server', 'port'],
     alias: {
@@ -218,11 +218,17 @@ function cli() {
     return acc
   }, {});
 
-  start(argv);
+  utils.start(argv);
 }
 
-module.exports = start;
+const utils = {
+  start
+}
+module.exports = {
+  cli,
+  utils
+}
 
 if (require.main === module) {
-  cli();
+  cli(process.argv);
 }

@@ -6,6 +6,7 @@ BUILD_TYPE ?=node-onbuild
 NAME ?=r7insight_docker
 NAME_BUILD_CONTAINER ?=${NAME}-build-${BUILD_TYPE}
 NAME_TEST_CONTAINER ?=${NAME}-test-${BUILD_TYPE}
+NAME_UNITTEST ?=${NAME}-unittest
 NAME_EXPORT_CONTAINER ?=${NAME}-export-${BUILD_TYPE}
 
 DOCKER_REGISTRY_PREFIX ?=rapid7/${NAME}
@@ -21,7 +22,8 @@ endif
 LOGENTRIES_TOKEN ?=XAXAXAXAXA
 WAIT_TIME ?=5
 
-.PHONY: default build test tag push publish bump-major bump-minor bump-patch export clean help
+.PHONY: default build unit-test start-test test tag push publish bump-major \
+		bump-minor bump-patch export clean help
 default: help
 
 build: ## Builds a new Docker image
@@ -29,7 +31,11 @@ build: ## Builds a new Docker image
 	@echo "[build] Building new image"
 	docker build --rm=true --tag="${NAME_BUILD_CONTAINER}" -f "Dockerfile${DOCKERFILE_SUFFIX}" .
 
-test: ## Tests a previous build Docker image to see if starts
+unit-test: ## Run the unit tests
+	@docker build -t "${NAME_UNITTEST}" -f tests/Dockerfile .
+	@docker run --rm --name "${NAME_UNITTEST}" "${NAME_UNITTEST}" 
+
+start-test: ## Tests a previous build Docker image to see if starts
 	@echo "[test] Removing existing test container if any"
 	@docker rm -f "${NAME_TEST_CONTAINER}" > /dev/null 2>&1 || true
 	@echo "[test] Starting a test container"
@@ -45,6 +51,8 @@ test: ## Tests a previous build Docker image to see if starts
 	@docker ps | grep "${NAME_TEST_CONTAINER}" | wc -l
 	@echo "[test] Cleaning up test container ${NAME_TEST_CONTAINER}"
 	@docker rm -f "${NAME_TEST_CONTAINER}" > /dev/null 2>&1 || true
+
+test: unit-test start-test ## Run all tests
 
 tag: ## Tags local build image to make it ready for push to Docker registry
 	docker tag "$(shell docker images -q ${NAME_BUILD_CONTAINER})" "${DOCKER_REGISTRY_PREFIX}:${DOCKER_REGISTRY_IMAGE_TAG_PREFIX}${DOCKER_REGISTRY_IMAGE_VERSION}"
