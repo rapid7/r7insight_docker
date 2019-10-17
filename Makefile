@@ -41,7 +41,7 @@ start-test: ## Tests a previous build Docker image to see if starts
 	@echo "[test] Starting a test container"
 	@#	Ensure Docker image exists
 	@docker images | grep -q "${NAME_BUILD_CONTAINER}" || \
-		(echo "[test] Docker image not found, run 'make test'" && false)
+		(echo "[test] Docker image not found, run 'make build'" && false)
 	@docker run -d --name="${NAME_TEST_CONTAINER}" \
 		-v /var/run/docker.sock:/var/run/docker.sock \
   		"${NAME_BUILD_CONTAINER}" -t "${LOGENTRIES_TOKEN}" -j -a host="${NAME_TEST_CONTAINER}"  > /dev/null 2>&1
@@ -97,6 +97,8 @@ bump-patch: ## Bump the patch version (0.0.1 -> 0.0.2)
 
 export: ## Export the build as a tarball
 	-docker rm -f "${NAME_EXPORT_CONTAINER}"
+	@docker images | grep -q "${NAME_BUILD_CONTAINER}" || \
+		(echo "[test] Docker image not found, run 'make build'" && false)
 	docker create --name "${NAME_EXPORT_CONTAINER}" "${NAME_BUILD_CONTAINER}"
 	docker export -o "${NAME}-${DOCKER_REGISTRY_IMAGE_VERSION}${DOCKER_REGISTRY_IMAGE_TAG_PREFIX}.tar" `docker ps -a -q -f 'name=${NAME_EXPORT_CONTAINER}'`
 
