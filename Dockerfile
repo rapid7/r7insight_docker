@@ -1,15 +1,13 @@
-# docker-logentries
-#
-# VERSION 0.2.0
+# r7insight_docker
 
 FROM node:0.12-onbuild
-MAINTAINER Rapid 7 - Logentries <support@logentries.com>
+LABEL maintainer="Rapid 7 - Platform Support <platformsupport@rapid7.com>"
+
+ENV NODE_ENV production
 
 WORKDIR /usr/src/app
-COPY package.json package.json
+COPY package.json index.js VERSION ./
 RUN npm install --production
-COPY index.js /usr/src/app/index.js
-COPY VERSION .
 
 ENTRYPOINT ["/usr/src/app/index.js"]
 CMD []

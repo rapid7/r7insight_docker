@@ -2,9 +2,9 @@
 
 Forward all your logs to [Rapid7 InsightOps](https://www.rapid7.com/products/insightops/), like a breeze.
 
-![logentries dashboard](https://raw.githubusercontent.com/rapid7/r7insight_docker/master/dashboard.png)
+![InsightOps dashboard](https://raw.githubusercontent.com/rapid7/r7insight_docker/master/dashboard.png)
 
-You can download the community pack created by Logentries at [https://logentries.com/resources/packs/docker/](https://logentries.com/resources/packs/docker/). The community pack comes with pre-defined out-of-the-box alerts and widgets to get you started.
+You can download the community pack created by InsightOps at [Docker pack](https://insightops.help.rapid7.com/docs/docker). The community pack comes with pre-defined out-of-the-box alerts and widgets to get you started.
 
 ## Usage as a Container
 
@@ -91,10 +91,10 @@ Install it with: `npm install r7insight_docker --save`
 Then, in your JS file:
 
 ```
-var logentries = require('r7insight_docker')({
+var insightops = require('r7insight_docker')({
   json: false, // or true to parse lines as JSON
   secure: true, // or false to connect over plain TCP
-  token: process.env.TOKEN, // logentries TOKEN
+  token: process.env.TOKEN, // insightops TOKEN
   newline: true, // Split on newline delimited entries
   stats: true, // disable stats if false
   add: null, // an object whose properties will be added
@@ -107,11 +107,11 @@ var logentries = require('r7insight_docker')({
   skipByImage: /.*dockerfile.*/ //optional
 })
 
-// logentries is the source stream with all the
+// insightops is the source stream with all the
 // log lines
 
 setTimeout(function() {
-  logentries.destroy()
+  insightops.destroy()
 }, 5000)
 ```
 

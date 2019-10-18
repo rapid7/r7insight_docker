@@ -4,11 +4,12 @@ NODE_VERSION ?=$(shell grep FROM Dockerfile | cut -d ':' -f 2| cut -d '-' -f 1)
 BUILD_TYPE ?=node-onbuild
 
 NAME ?=r7insight_docker
-NAME_BUILD_CONTAINER ?=$(NAME)-build-$(BUILD_TYPE)
-NAME_TEST_CONTAINER ?=$(NAME)-test-$(BUILD_TYPE)
-NAME_EXPORT_CONTAINER ?=$(NAME)-export-$(BUILD_TYPE)
+NAME_BUILD_CONTAINER ?=${NAME}-build-${BUILD_TYPE}
+NAME_TEST_CONTAINER ?=${NAME}-test-${BUILD_TYPE}
+NAME_UNITTEST ?=${NAME}-unittest
+NAME_EXPORT_CONTAINER ?=${NAME}-export-${BUILD_TYPE}
 
-DOCKER_REGISTRY_PREFIX ?=rapid7/$(NAME)
+DOCKER_REGISTRY_PREFIX ?=rapid7/${NAME}
 DOCKER_REGISTRY_IMAGE_VERSION ?=$(shell cat VERSION)
 
 # Use the alpine node
@@ -18,34 +19,45 @@ ifeq (${BUILD_TYPE},alpine-node)
 endif
 
 # Just a random token
-LOGENTRIES_TOKEN ?=XAXAXAXAXA
+LOG_TOKEN ?=XAXAXAXAXA
 WAIT_TIME ?=5
 
-.PHONY: default build test tag push publish bump-major bump-minor bump-patch export clean help
+.PHONY: default build unit-test start-test test tag push publish bump-major \
+		bump-minor bump-patch export clean help
 default: help
 
 build: ## Builds a new Docker image
-	echo $(BUILD_TYPE)
-	echo $(DOCKERFILE_SUFFIX)
+	@echo "[build] Build type: ${BUILD_TYPE}"
 	@echo "[build] Building new image"
-	docker build --rm=true --tag=$(NAME_BUILD_CONTAINER) -f Dockerfile$(DOCKERFILE_SUFFIX) .
+	docker build --rm=true --tag="${NAME_BUILD_CONTAINER}" -f "Dockerfile${DOCKERFILE_SUFFIX}" .
 
-test: ## Tests a previous build Docker image to see if starts
+unit-test: ## Run the unit tests
+	@echo "[test] Building and running unit tests"
+	@docker build -t "${NAME_UNITTEST}" -f tests/Dockerfile .
+	@docker run --rm --name "${NAME_UNITTEST}" "${NAME_UNITTEST}"
+
+start-test: ## Tests a previous build Docker image to see if starts
 	@echo "[test] Removing existing test container if any"
-	@docker rm -f $(NAME_TEST_CONTAINER) > /dev/null 2>&1 || true
+	@-docker rm -f "${NAME_TEST_CONTAINER}" &>/dev/null
 	@echo "[test] Starting a test container"
 	@#	Ensure Docker image exists
-	@docker images | grep -q "$(NAME_BUILD_CONTAINER)" || \
-		(echo "[test] Docker image not found, run 'make test'" && false)
-	@docker run -d --name=$(NAME_TEST_CONTAINER) \
+	@docker images | grep -q "${NAME_BUILD_CONTAINER}" || \
+		(echo "[test] Docker image not found, running 'make build'" && make build)
+	@docker run -d --name="${NAME_TEST_CONTAINER}" \
 		-v /var/run/docker.sock:/var/run/docker.sock \
-  $(NAME_BUILD_CONTAINER) -t $(LOGENTRIES_TOKEN) -r eu -a host=$(NAME_TEST_CONTAINER)  > /dev/null 2>&1
+       	"${NAME_BUILD_CONTAINER}" -t "${LOG_TOKEN}" -r us -a host="${NAME_TEST_CONTAINER}" &>/dev/null
 	@echo "[test] Testing if the container stays running"
-	@echo "[test] Waiting for $(WAIT_TIME) seconds"
-	@sleep $(WAIT_TIME)
-	@docker ps | grep -q $(NAME_TEST_CONTAINER)
-	@echo "[test] Cleaning up test container $(NAME_TEST_CONTAINER)"
-	@docker rm -f $(NAME_TEST_CONTAINER) > /dev/null 2>&1 || true
+	@echo "[test] Waiting for ${WAIT_TIME} seconds"
+	@sleep "${WAIT_TIME}"
+	@#	If container name doesn't exist, echo, and remove the container
+	@docker ps | grep -q "${NAME_TEST_CONTAINER}" || \
+		(echo "[test] Container exited and failed." && \
+		 (docker rm -f "${NAME_TEST_CONTAINER}" &>/dev/null && \
+		 false))
+	@echo "[test] Cleaning up test container ${NAME_TEST_CONTAINER}"
+	@-docker rm -f "${NAME_TEST_CONTAINER}" &>/dev/null
+
+test: unit-test start-test ## Run all tests
 
 tag: ## Tags local build image to make it ready for push to Docker registry
 	docker tag "$(shell docker images -q ${NAME_BUILD_CONTAINER})" "${DOCKER_REGISTRY_PREFIX}:${DOCKER_REGISTRY_IMAGE_VERSION}${DOCKER_REGISTRY_IMAGE_TAG_PREFIX}"
@@ -66,6 +78,7 @@ bump-major: ## Bump the major version (1.0.0 -> 2.0.0)
 	@echo "New version: ${DOCKER_REGISTRY_IMAGE_VERSION}"
 	@git add VERSION package.json
 	@git commit -m "Bump version to ${DOCKER_REGISTRY_IMAGE_VERSION}"
+	@git tag -a "${DOCKER_REGISTRY_IMAGE_VERSION}" -m "Releasing version ${DOCKER_REGISTRY_IMAGE_VERSION}"
 
 bump-minor: ## Bump the minor version (0.1.0 -> 0.2.0)
 	@echo "Current version: ${DOCKER_REGISTRY_IMAGE_VERSION}"
@@ -75,6 +88,7 @@ bump-minor: ## Bump the minor version (0.1.0 -> 0.2.0)
 	@echo "New version: ${DOCKER_REGISTRY_IMAGE_VERSION}"
 	@git add VERSION package.json
 	@git commit -m "Bump version to ${DOCKER_REGISTRY_IMAGE_VERSION}"
+	@git tag -a "${DOCKER_REGISTRY_IMAGE_VERSION}" -m "Releasing version ${DOCKER_REGISTRY_IMAGE_VERSION}"
 
 bump-patch: ## Bump the patch version (0.0.1 -> 0.0.2)
 	@echo "Current version: ${DOCKER_REGISTRY_IMAGE_VERSION}"
@@ -84,15 +98,19 @@ bump-patch: ## Bump the patch version (0.0.1 -> 0.0.2)
 	@echo "New version: ${DOCKER_REGISTRY_IMAGE_VERSION}"
 	@git add VERSION package.json
 	@git commit -m "Bump version to ${DOCKER_REGISTRY_IMAGE_VERSION}"
+	@git tag -a "${DOCKER_REGISTRY_IMAGE_VERSION}" -m "Releasing version ${DOCKER_REGISTRY_IMAGE_VERSION}"
 
 export: ## Export the build as a tarball
 	-docker rm -f "${NAME_EXPORT_CONTAINER}"
+	@docker images | grep -q "${NAME_BUILD_CONTAINER}" || \
+		(echo "[test] Docker image not found, running 'make build'" && make build)
 	docker create --name "${NAME_EXPORT_CONTAINER}" "${NAME_BUILD_CONTAINER}"
 	docker export -o "${NAME}-${DOCKER_REGISTRY_IMAGE_VERSION}${DOCKER_REGISTRY_IMAGE_TAG_PREFIX}.tar" `docker ps -a -q -f 'name=${NAME_EXPORT_CONTAINER}'`
 
 clean: ## Remove Docker images from build and tag commands
 	@#	This expands to 3 images, build, latest versioned (0.9.0) and latest
-	-docker image rm "${NAME_BUILD_CONTAINER}" ${DOCKER_REGISTRY_PREFIX}:{${DOCKER_REGISTRY_IMAGE_VERSION},latest}${DOCKER_REGISTRY_IMAGE_TAG_PREFIX}
+	-docker image rm "${NAME_BUILD_CONTAINER}" ${DOCKER_REGISTRY_PREFIX}:{${DOCKER_REGISTRY_IMAGE_VERSION},latest}${DOCKER_REGISTRY_IMAGE_TAG_PREFIX} \
+                     "${NAME_UNITTEST}"
 
 help: ## Shows help
 	@echo "================================================================================================="
@@ -103,7 +121,7 @@ help: ## Shows help
 	@echo "set the environment accordingly to change the build type"
 	@echo "================================================================================================="
 	@IFS=$$'\n' ; \
-    help_lines=(`fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//'`); \
+    help_lines=(`fgrep -h "##" ${MAKEFILE_LIST} | fgrep -v fgrep | sed -e 's/\\$$//'`); \
     for help_line in $${help_lines[@]}; do \
         IFS=$$'#' ; \
         help_split=($$help_line) ; \

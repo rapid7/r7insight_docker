@@ -144,8 +144,8 @@ function start(opts) {
 
 var unbound;
 
-function cli() {
-  var argv = minimist(process.argv.slice(2), {
+function cli(process_args) {
+  var argv = minimist(process_args.slice(2), {
     boolean: ['json', 'secure', 'stats', 'logs', 'dockerEvents'],
     string: ['token', 'region', 'logstoken', 'statstoken', 'eventstoken', 'server', 'port'],
     alias: {
@@ -162,6 +162,7 @@ function cli() {
     },
     default: {
       json: false,
+      secure: true,
       newline: true,
       stats: true,
       logs: true,
@@ -181,7 +182,7 @@ function cli() {
 
   if (argv.help || !(argv.token || argv.logstoken || argv.statstoken || argv.eventstoken) || !(argv.region)) {
     console.log('Usage: r7insight_docker [-l LOGSTOKEN] [-k STATSTOKEN] [-e EVENTSTOKEN]\n' +
-                '                         [-t TOKEN] [--secure] [--json]\n' +
+                '                         [-t TOKEN] [--no-secure] [--json]\n' +
                 '                         [-r REGION]\n' +
                 '                         [--no-newline] [--no-stats] [--no-logs] [--no-dockerEvents]\n' +
                 '                         [-i STATSINTERVAL] [-a KEY=VALUE]\n' +
@@ -218,11 +219,17 @@ function cli() {
     return acc
   }, {});
 
-  start(argv);
+  utils.start(argv);
 }
 
-module.exports = start;
+var utils = {
+  start: start,
+}
+module.exports = {
+  cli: cli,
+  utils: utils,
+}
 
 if (require.main === module) {
-  cli();
+  cli(process.argv);
 }
