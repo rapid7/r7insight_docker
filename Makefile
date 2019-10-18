@@ -39,11 +39,11 @@ test: ## Tests a previous build Docker image to see if starts
 		(echo "[test] Docker image not found, run 'make test'" && false)
 	@docker run -d --name=$(NAME_TEST_CONTAINER) \
 		-v /var/run/docker.sock:/var/run/docker.sock \
-  $(NAME_BUILD_CONTAINER) -t $(LOGENTRIES_TOKEN) -j -a host=$(NAME_TEST_CONTAINER)  > /dev/null 2>&1
+  $(NAME_BUILD_CONTAINER) -t $(LOGENTRIES_TOKEN) -r eu -a host=$(NAME_TEST_CONTAINER)  > /dev/null 2>&1
 	@echo "[test] Testing if the container stays running"
 	@echo "[test] Waiting for $(WAIT_TIME) seconds"
 	@sleep $(WAIT_TIME)
-	@docker ps | grep $(NAME_TEST_CONTAINER) | wc -l
+	@docker ps | grep -q $(NAME_TEST_CONTAINER)
 	@echo "[test] Cleaning up test container $(NAME_TEST_CONTAINER)"
 	@docker rm -f $(NAME_TEST_CONTAINER) > /dev/null 2>&1 || true
 
