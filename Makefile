@@ -44,7 +44,7 @@ start-test: ## Tests a previous build Docker image to see if starts
 	@docker images | grep -q "${NAME_BUILD_CONTAINER}" || \
 		(echo "[test] Docker image not found, running 'make build'" && make build)
 	@docker run -d --name="${NAME_TEST_CONTAINER}" \
-		-v /var/run/docker.sock:/var/run/docker.sock \
+		-v /var/run/docker.sock:/var/run/docker.sock --read-only --security-opt=no-new-privileges \
        	"${NAME_BUILD_CONTAINER}" -t "${LOG_TOKEN}" -r us -a host="${NAME_TEST_CONTAINER}" &>/dev/null
 	@echo "[test] Testing if the container stays running"
 	@echo "[test] Waiting for ${WAIT_TIME} seconds"
