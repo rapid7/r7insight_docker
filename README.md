@@ -12,13 +12,36 @@ The simplest way to forward all your container's log to Rapid7 InsightOps is to
 run this repository as a container, with:
 
 ```sh
-docker run -v /var/run/docker.sock:/var/run/docker.sock rapid7/r7insight_docker -t <TOKEN> -r <REGION> -j -a host=`uname -n`
+docker run -v /var/run/docker.sock:/var/run/docker.sock \
+           --read-only \
+           --security-opt=no-new-privileges \
+           rapid7/r7insight_docker \
+           -t <TOKEN> \
+           -r <REGION> \
+           -j \
+           -a host=`uname -n`
 ```
 
 You can also use different tokens for logging, stats and events:
 ```sh
-docker run -v /var/run/docker.sock:/var/run/docker.sock rapid7/r7insight_docker -l <LOGSTOKEN> -k <STATSTOKEN> -e <EVENTSTOKEN> -r <REGION> -j -a host=`uname -n`
+docker run -v /var/run/docker.sock:/var/run/docker.sock \
+           --read-only \
+           --security-opt=no-new-privileges \
+           rapid7/r7insight_docker \
+           -l <LOGSTOKEN> \
+           -k <STATSTOKEN> \
+           -e <EVENTSTOKEN> \
+           -r <REGION> \
+           -j \
+           -a host=`uname -n`
 ```
+
+The `--read-only` docker flag specifies that the container file system will be read-only.
+This is not a requirement but since currently there's no need for writing, it makes the container more secure.
+
+The `--security-opt=no-new-privileges` docker flag sets a kernel bit which stops the process or its children
+from gaining additional privileges via setuid or sgid.  
+Once again not required, but increases security.
 
 You can pass the `--no-stats` flag if you do not want stats to be
 published to Rapid7 InsightOps every second. You __need this flag for Docker
@@ -47,7 +70,15 @@ To run the container in such environments add --privileged to the `docker run` c
 
 Example:
 ```sh
-docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock rapid7/r7insight_docker -t <TOKEN> -r <REGION> -j -a host=`uname -n`
+docker run --privileged \
+           -v /var/run/docker.sock:/var/run/docker.sock \
+           --read-only \
+           --security-opt=no-new-privileges \
+           rapid7/r7insight_docker \
+           -t <TOKEN> \
+           -r <REGION> \
+           -j \
+           -a host=`uname -n`
 ```
 
 ## Usage as a CLI
@@ -122,7 +153,14 @@ First clone this repository, then:
 
 ```bash
 docker build -t r7insight_docker .
-docker run -v /var/run/docker.sock:/var/run/docker.sock r7insight_docker -t <TOKEN> -r <REGION> -j -a host=`uname -n`
+docker run -v /var/run/docker.sock:/var/run/docker.sock \
+              --read-only \
+              --security-opt=no-new-privileges \
+              r7insight_docker \
+              -t <TOKEN> \
+              -r <REGION> \
+              -j \
+              -a host=`uname -n`
 ```
 ### Using Make - the official nodejs onbuild image
 ```bash
