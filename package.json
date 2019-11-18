@@ -11,6 +11,9 @@
   "scripts": {
     "test": "make test"
   },
+  "engines": {
+    "node": ">= 8.0.0"
+  },
   "author": "Rapid7 <InsightOpsTeam@rapid7.com>",
   "license": "MIT",
   "dependencies": {
