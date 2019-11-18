@@ -19,7 +19,7 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock \
            -t <TOKEN> \
            -r <REGION> \
            -j \
-           -a host=`uname -n`
+           -a host="$(uname -n)"
 ```
 
 You can also use different tokens for logging, stats and events:
@@ -33,7 +33,7 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock \
            -e <EVENTSTOKEN> \
            -r <REGION> \
            -j \
-           -a host=`uname -n`
+           -a host="$(uname -n)"
 ```
 
 The `--read-only` docker flag specifies that the container file system will be read-only.
@@ -54,7 +54,7 @@ published to Rapid7 InsightOps.
 
 The `-i/--statsinterval <STATSINTERVAL>` downsamples the logs sent to Rapid7 InsightOps. It collects samples and averages them before sending to Rapid7 InsightOps.
 
-If you don't use `-a` a default ``host=`uname -n` `` value will be added.
+If you don't use the `-a` flag, a default value of `host="$(uname -n)"` will be added.
 
 You can pass the `--no-secure` flag if you want your logs to be sent to the Insight Platform un-encrypted.  
 
@@ -80,13 +80,13 @@ docker run --privileged \
            -t <TOKEN> \
            -r <REGION> \
            -j \
-           -a host=`uname -n`
+           -a host="$(uname -n)"
 ```
 
 ## Usage as a CLI
 
 1. `npm install r7insight_docker -g`
-2. `r7insight_docker -t TOKEN -r REGION -a host=\`uname -n\``
+2. `r7insight_docker -t TOKEN -r REGION -a host="$(uname -n)"`
 
 
 You have to specify TOKEN by passing `-t TOKEN`
@@ -162,7 +162,7 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock \
               -t <TOKEN> \
               -r <REGION> \
               -j \
-              -a host=`uname -n`
+              -a host="$(uname -n)"
 ```
 ### Using Make - the official nodejs buster image
 ```bash
