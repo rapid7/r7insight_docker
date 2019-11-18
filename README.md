@@ -56,6 +56,8 @@ The `-i/--statsinterval <STATSINTERVAL>` downsamples the logs sent to Rapid7 Ins
 
 If you don't use `-a` a default ``host=`uname -n` `` value will be added.
 
+You can pass the `--no-secure` flag if you want your logs to be sent to the Insight Platform un-encrypted.  
+
 You can also filter the containers for which the logs/stats are
 forwarded with:
 
