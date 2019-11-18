@@ -162,9 +162,9 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock \
               -j \
               -a host=`uname -n`
 ```
-### Using Make - the official nodejs onbuild image
+### Using Make - the official nodejs buster image
 ```bash
-export BUILD_TYPE=node-onbuild
+export BUILD_TYPE=node-buster
 make build
 make test
 make tag
@@ -172,7 +172,7 @@ make tag
 
 ### Using Make - the alpine linux build (~42Mb)
 ```bash
-export BUILD_TYPE=alpine-node
+export BUILD_TYPE=node-alpine
 make build
 make test
 make tag

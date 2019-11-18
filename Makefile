@@ -18,8 +18,8 @@ ifeq (${BUILD_TYPE},node-alpine)
 	DOCKER_REGISTRY_IMAGE_TAG_POSTFIX ?=-alpine
 endif
 
-# Just a random token
-LOG_TOKEN ?=XAXAXAXAXA
+# Random token
+LOG_TOKEN ?=TNETENNBA
 WAIT_TIME ?=5
 
 .PHONY: default build unit-test start-test test tag push publish bump-major \
@@ -43,7 +43,7 @@ start-test: ## Tests a previous build Docker image to see if starts
 	@#	Ensure Docker image exists
 	@docker images | grep -q "${NAME_BUILD_CONTAINER}" || \
 		(echo "[test] Docker image not found, running 'make build'" && make build)
-	@docker run -d --name="${NAME_TEST_CONTAINER}" \
+	@docker run -d --name "${NAME_TEST_CONTAINER}" \
 		-v /var/run/docker.sock:/var/run/docker.sock --read-only --security-opt=no-new-privileges \
        	"${NAME_BUILD_CONTAINER}" -t "${LOG_TOKEN}" -r us -a host="${NAME_TEST_CONTAINER}" &>/dev/null
 	@echo "[test] Testing if the container stays running"
@@ -118,7 +118,7 @@ help: ## Shows help
 	@echo "- BUILD_TYPE=node-buster (default)"
 	@echo "- BUILD_TYPE=node-alpine"
 	@echo ""
-	@echo "set the environment accordingly to change the build type"
+	@echo "set the environment variable accordingly to change the build type"
 	@echo "================================================================================================="
 	@IFS=$$'\n' ; \
     help_lines=(`fgrep -h "##" ${MAKEFILE_LIST} | fgrep -v fgrep | sed -e 's/\\$$//'`); \
