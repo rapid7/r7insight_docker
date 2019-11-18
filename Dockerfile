@@ -1,6 +1,6 @@
 # r7insight_docker
 
-FROM node:0.12-onbuild
+FROM node:12.13.0-buster
 LABEL maintainer="Rapid 7 - Platform Support <platformsupport@rapid7.com>"
 
 ENV NODE_ENV production

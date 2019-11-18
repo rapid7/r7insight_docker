@@ -1,6 +1,6 @@
 # r7insight_docker unit-test image
 
-FROM node:12.12.0-stretch
+FROM node:12.13.0-buster
 LABEL maintainer="Rapid 7 - Platform Support <platformsupport@rapid7.com>"
 
 ENV NODE_ENV development
