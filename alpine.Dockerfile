@@ -8,7 +8,7 @@ ENV NODE_ENV production
 
 WORKDIR /usr/src/app
 COPY package.json index.js VERSION ./
-RUN npm install --production
+RUN npm install
 
 ENTRYPOINT ["/usr/src/app/index.js"]
 CMD []
