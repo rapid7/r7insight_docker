@@ -6,7 +6,7 @@ LABEL maintainer="Rapid 7 - Platform Support <platformsupport@rapid7.com>"
 ENV NODE_ENV production
 
 WORKDIR /usr/src/app
-COPY package.json index.js VERSION ./
+COPY package.json index.js VERSION package-lock.json ./
 RUN npm install
 
 ENTRYPOINT ["/usr/src/app/index.js"]
