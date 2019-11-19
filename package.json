@@ -9,7 +9,7 @@
   "readme": "see [README.md](https://github.com/rapid7/r7insight_docker/blob/master/README.md)",
   "main": "index.js",
   "scripts": {
-    "test": "make test"
+    "test": "mocha tests/**/test*.js --reporter spec"
   },
   "engines": {
     "node": ">= 8.0.0"
@@ -27,6 +27,7 @@
     "through2": "^3.0.1"
   },
   "devDependencies": {
-    "sinon": "^7.5.0"
+    "sinon": "^7.5.0",
+    "mocha": "^6.2.2"
   }
 }

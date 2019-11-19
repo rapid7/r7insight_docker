@@ -6,7 +6,6 @@ BUILD_TYPE ?=node-buster
 NAME ?=r7insight_docker
 NAME_BUILD_CONTAINER ?=${NAME}-build-${BUILD_TYPE}
 NAME_TEST_CONTAINER ?=${NAME}-test-${BUILD_TYPE}
-NAME_UNITTEST ?=${NAME}-unittest
 NAME_EXPORT_CONTAINER ?=${NAME}-export-${BUILD_TYPE}
 
 DOCKER_REGISTRY_PREFIX ?=rapid7/${NAME}
@@ -32,9 +31,7 @@ build: ## Builds a new Docker image
 	docker build --rm -t "${NAME_BUILD_CONTAINER}" -f "${DOCKERFILE_PREFIX}Dockerfile" .
 
 unit-test: ## Run the unit tests
-	@echo "[test] Building and running unit tests"
-	@docker build -t "${NAME_UNITTEST}" -f tests/Dockerfile .
-	@docker run --rm --name "${NAME_UNITTEST}" "${NAME_UNITTEST}"
+	@npm test
 
 start-test: ## Tests a previous build Docker image to see if starts
 	@echo "[test] Removing existing test container if any"
