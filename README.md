@@ -1,3 +1,5 @@
+[![Travis CI](https://img.shields.io/travis/rapid7/r7insight_docker.svg?style=for-the-badge)](https://travis-ci.org/rapid7/r7insight_docker)
+
 # r7insight_docker
 
 Forward all your logs to [Rapid7 InsightOps](https://www.rapid7.com/products/insightops/), like a breeze.
