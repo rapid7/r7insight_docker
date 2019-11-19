@@ -73,7 +73,7 @@ bump-major: ## Bump the major version (1.0.0 -> 2.0.0)
 	@#	Don't add git tag and commit
 	@npm version --no-git-tag-version major
 	@echo "New version: ${DOCKER_REGISTRY_IMAGE_VERSION}"
-	@git add VERSION package.json
+	@git add VERSION package.json package-lock.json
 	@git commit -m "Bump version to ${DOCKER_REGISTRY_IMAGE_VERSION}"
 	@git tag -a "${DOCKER_REGISTRY_IMAGE_VERSION}" -m "Releasing version ${DOCKER_REGISTRY_IMAGE_VERSION}"
 
@@ -83,7 +83,7 @@ bump-minor: ## Bump the minor version (0.1.0 -> 0.2.0)
 	@#	Don't add git tag and commit
 	@npm version --no-git-tag-version minor
 	@echo "New version: ${DOCKER_REGISTRY_IMAGE_VERSION}"
-	@git add VERSION package.json
+	@git add VERSION package.json package-lock.json
 	@git commit -m "Bump version to ${DOCKER_REGISTRY_IMAGE_VERSION}"
 	@git tag -a "${DOCKER_REGISTRY_IMAGE_VERSION}" -m "Releasing version ${DOCKER_REGISTRY_IMAGE_VERSION}"
 
@@ -93,7 +93,7 @@ bump-patch: ## Bump the patch version (0.0.1 -> 0.0.2)
 	@#	Don't add git tag and commit
 	@npm version --no-git-tag-version patch
 	@echo "New version: ${DOCKER_REGISTRY_IMAGE_VERSION}"
-	@git add VERSION package.json
+	@git add VERSION package.json package-lock.json
 	@git commit -m "Bump version to ${DOCKER_REGISTRY_IMAGE_VERSION}"
 	@git tag -a "${DOCKER_REGISTRY_IMAGE_VERSION}" -m "Releasing version ${DOCKER_REGISTRY_IMAGE_VERSION}"
 
