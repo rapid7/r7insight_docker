@@ -1,7 +1,7 @@
 # r7insight_docker
 
 FROM node:0.12-onbuild
-LABEL maintainer="Rapid 7 - Platform Support <platformsupport@rapid7.com>"
+LABEL maintainer="Rapid 7 - InsightOps Team <InsightOpsTeam@rapid7.com>"
 
 ENV NODE_ENV production
 
