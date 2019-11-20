@@ -216,8 +216,3 @@ All the originating requests are wrapped in a
 ## License
 
 MIT
-
-
-## Contact Support
-
-Please email our support team at support@rapid7.com if you need any help.
