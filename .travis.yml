@@ -18,7 +18,8 @@ jobs:
       name: "node-buster"
       #   `make start-test` will automatically build if images aren't found
       script: BUILD_TYPE=node-buster make start-test
-    - name: "node-alpine"
+    - stage: "container tests"
+      name: "node-alpine"
       script: BUILD_TYPE=node-alpine make start-test
 stages:
   - "unit tests"
