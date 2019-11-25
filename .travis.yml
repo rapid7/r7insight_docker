@@ -5,7 +5,9 @@ services:
 #   `npm test`
 stage: "unit tests"
 node_js:
-  - "12.13.0"
+  - "node"  # Latest
+  - "lts/*" # Latest LTS
+  - "12"
   - "11"
   - "10"
   - "9"
