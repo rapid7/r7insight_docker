@@ -126,7 +126,9 @@ Install it with: `npm install r7insight_docker --save`
 Then, in your JS file:
 
 ```
-var insightops = require('r7insight_docker')({
+const insightops = require('r7insight_docker');
+
+const logger = insightops.utils.start({
   json: false, // or true to parse lines as JSON
   secure: true, // or false to connect over plain TCP
   token: process.env.TOKEN, // insightops TOKEN
@@ -140,14 +142,13 @@ var insightops = require('r7insight_docker')({
   matchByImage: /matteocollina/, //optional
   skipByName: /.*pasteur.*/, //optional
   skipByImage: /.*dockerfile.*/ //optional
-})
+});
 
-// insightops is the source stream with all the
+// logger is the source stream with all the
 // log lines
-
 setTimeout(function() {
-  insightops.destroy()
-}, 5000)
+  logger.destroy();
+}, 5000);
 ```
 
 ## Building a Docker repo from this repository
