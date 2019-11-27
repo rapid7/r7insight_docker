@@ -2,7 +2,7 @@
 
 # r7insight_docker
 
-Forward all your logs to [Rapid7 InsightOps](https://www.rapid7.com/products/insightops/), like a breeze.
+Forward all your logs to the [Rapid7 Insight Platform](https://www.rapid7.com/products/insight-platform/), like a breeze.
 
 ![InsightOps dashboard](https://raw.githubusercontent.com/rapid7/r7insight_docker/master/dashboard.png)
 
@@ -10,7 +10,7 @@ You can download the community pack created by InsightOps at [Docker pack](https
 
 ## Usage as a Container
 
-The simplest way to forward all your container's log to Rapid7 InsightOps is to
+The simplest way to forward all your container's log to the Rapid7 Insight Platform is to
 run this repository as a container, with:
 
 ```sh
@@ -38,6 +38,12 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock \
            -a host="$(uname -n)"
 ```
 
+You can supply log, stats and event tokens using environment variables:
+`INSIGHT_LOGSTOKEN`: Log token for logs
+`INSIGHT_STATSTOKEN`: Log token for stats
+`INSIGHT_EVENTSTOKEN`: Log token for events
+`INSIGHT_TOKEN`: Log token which is used for the above tokens if one is not provided. (You can only supply this token and it'll be used for logs, stats and events)  
+
 The `--read-only` docker flag specifies that the container file system will be read-only.
 This is not a requirement but since currently there's no need for writing, it makes the container more secure.
 
@@ -46,15 +52,15 @@ from gaining additional privileges via setuid or sgid.
 Once again not required, but increases security.
 
 You can pass the `--no-stats` flag if you do not want stats to be
-published to Rapid7 InsightOps every second. You __need this flag for Docker
+published to the Rapid7 Insight Platform every second. You __need this flag for Docker
 version < 1.5__.
 
-You can pass the `--no-logs` flag if you do not want logs to be published to Rapid7 InsightOps.
+You can pass the `--no-logs` flag if you do not want logs to be published to the Rapid7 Insight Platform.
 
 You can pass the `--no-dockerEvents` flag if you do not want events to be
-published to Rapid7 InsightOps.
+published to the Rapid7 Insight Platform.
 
-The `-i/--statsinterval <STATSINTERVAL>` downsamples the logs sent to Rapid7 InsightOps. It collects samples and averages them before sending to Rapid7 InsightOps.
+The `-i/--statsinterval <STATSINTERVAL>` downsamples the logs sent to the Rapid7 Insight Platform. It collects samples and averages them before sending.
 
 If you don't use the `-a` flag, a default value of `host="$(uname -n)"` will be added.
 
@@ -99,17 +105,17 @@ You can also pass the `-j` switch if you log in JSON format, like
 [bunyan](http://npm.im/bunyan).
 
 You can pass the `--no-stats` flag if you do not want stats to be
-published to Rapid7 InsightOps every second.
+published to the Rapid7 Insight Platform every second.
 
-You can pass the `--no-logs` flag if you do not want logs to be published to Rapid7 InsightOps.
+You can pass the `--no-logs` flag if you do not want logs to be published to the Rapid7 Insight Platform.
 
 You can pass the `--no-dockerEvents` flag if you do not want events to be
-published to Rapid7 InsightOps.
+published to the Rapid7 Insight Platform.
 
 The `-a/--add` flag allows to add fixed values to the data being
 published. This follows the format 'name=value'.
 
-The `-i/--statsinterval` downsamples the logs sent to Rapid7 InsightOps. It collects samples and averages them before sending to Rapid7 InsightOps.
+The `-i/--statsinterval` downsamples the logs sent to the Rapid7 Insight Platform. It collects samples and averages them before sending.
 
 You can also filter the containers for which the logs/stats are
 forwarded with:
@@ -126,10 +132,13 @@ Install it with: `npm install r7insight_docker --save`
 Then, in your JS file:
 
 ```
-var insightops = require('r7insight_docker')({
+const insight = require('r7insight_docker');
+
+const logger = insight.utils.start({
   json: false, // or true to parse lines as JSON
   secure: true, // or false to connect over plain TCP
-  token: process.env.TOKEN, // insightops TOKEN
+  region: "eu", // specify region
+  token: process.env.TOKEN, // Insight Platform TOKEN
   newline: true, // Split on newline delimited entries
   stats: true, // disable stats if false
   add: null, // an object whose properties will be added
@@ -140,14 +149,13 @@ var insightops = require('r7insight_docker')({
   matchByImage: /matteocollina/, //optional
   skipByName: /.*pasteur.*/, //optional
   skipByImage: /.*dockerfile.*/ //optional
-})
+});
 
-// insightops is the source stream with all the
+// logger is the source stream with all the
 // log lines
-
 setTimeout(function() {
-  insightops.destroy()
-}, 5000)
+  logger.destroy();
+}, 5000);
 ```
 
 ## Building a Docker repo from this repository

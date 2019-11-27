@@ -89,7 +89,8 @@ function start(opts) {
   }
 
   if (!stats && !loghose && !dockerEvents) {
-    throw new Error('you should enable at least one of stats, logs or dockerEvents');
+    throw new Error(`You should enable either stats, logs or dockerEvents, \
+this might be due to missing log token.`);
   }
 
   pipe();
@@ -169,10 +170,10 @@ function cli(process_args) {
       dockerEvents: true,
       statsinterval: 30,
       add: [ 'host=' + os.hostname() ],
-      token: process.env.LOGENTRIES_TOKEN,
-      logstoken: process.env.LOGENTRIES_LOGSTOKEN || process.env.LOGENTRIES_TOKEN,
-      statstoken: process.env.LOGENTRIES_STATSTOKEN || process.env.LOGENTRIES_TOKEN,
-      eventstoken: process.env.LOGENTRIES_EVENTSTOKEN || process.env.LOGENTRIES_TOKEN,
+      token: process.env.INSIGHT_TOKEN,
+      logstoken: process.env.INSIGHT_LOGSTOKEN || process.env.INSIGHT_TOKEN,
+      statstoken: process.env.INSIGHT_STATSTOKEN || process.env.INSIGHT_TOKEN,
+      eventstoken: process.env.INSIGHT_EVENTSTOKEN || process.env.INSIGHT_TOKEN,
       server: '.data.logs.insight.rapid7.com',
       port: unbound
     }
