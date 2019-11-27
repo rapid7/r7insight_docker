@@ -126,12 +126,13 @@ Install it with: `npm install r7insight_docker --save`
 Then, in your JS file:
 
 ```
-const insightops = require('r7insight_docker');
+const insight = require('r7insight_docker');
 
-const logger = insightops.utils.start({
+const logger = insight.utils.start({
   json: false, // or true to parse lines as JSON
   secure: true, // or false to connect over plain TCP
-  token: process.env.TOKEN, // insightops TOKEN
+  region: "eu", // specify region
+  token: process.env.TOKEN, // Insight Platform TOKEN
   newline: true, // Split on newline delimited entries
   stats: true, // disable stats if false
   add: null, // an object whose properties will be added

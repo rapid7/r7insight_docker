@@ -1,16 +1,15 @@
+const insight = require('./');
 
-var insightops = require('./')({
+const logger = insight.utils.start({
   json: false, // or true to parse lines as JSON
-  secure: false, // or true to connect securely
-  token: process.env.TOKEN,
-  statsinterval: 5 // collect 5 logs, average them and send result to InsightOps
+  secure: true, // or false to connect over plain TCP
+  region: "eu", // specify region
+  token: process.env.TOKEN, // Insight Platform TOKEN
+  newline: true, // Split on newline delimited entries
 });
 
-// insightops is the source stream with all the
+// logger is the source stream with all the
 // log lines
-
-/*
 setTimeout(function() {
-  insightops.destroy()
-}, 1000);
-*/
+  logger.destroy();
+}, 5000);
