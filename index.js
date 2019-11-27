@@ -89,7 +89,8 @@ function start(opts) {
   }
 
   if (!stats && !loghose && !dockerEvents) {
-    throw new Error('you should enable at least one of stats, logs or dockerEvents');
+    throw new Error(`You should enable either stats, logs or dockerEvents, \
+this might be due to missing log token.`);
   }
 
   pipe();
