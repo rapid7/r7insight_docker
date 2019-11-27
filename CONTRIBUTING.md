@@ -42,4 +42,4 @@ You only need to do the following once:
 - `make publish` (npm package publish, will require account credentials, update **package.json** if needed)
 
 
-That's it! Keep in mind that if you changed the **README.md** you will also need to update it manually on Docker Hub.  
+That's it! Keep in mind that if you changed the **README.md** you will also need to update it manually on Docker Hub and npm.  
