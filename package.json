@@ -1,7 +1,7 @@
 {
   "name": "r7insight_docker",
-  "version": "1.0.1",
-  "description": "Forward all logs from all running Docker containers to Rapid7 InsightOps",
+  "version": "2.0.0",
+  "description": "Forward all logs from all running Docker containers to the Rapid7 Insight Platform",
   "repository": {
     "type": "git",
     "url": "https://github.com/rapid7/r7insight_docker.git"
@@ -9,21 +9,25 @@
   "readme": "see [README.md](https://github.com/rapid7/r7insight_docker/blob/master/README.md)",
   "main": "index.js",
   "scripts": {
-    "test": "make test"
+    "test": "mocha tests/**/test*.js --reporter spec"
+  },
+  "engines": {
+    "node": ">= 8.0.0"
   },
   "author": "Rapid7 <InsightOpsTeam@rapid7.com>",
   "license": "MIT",
   "dependencies": {
-    "docker-allcontainers": "0.4.0",
-    "docker-event-log": "0.1.2",
-    "docker-loghose": "1.1.0",
-    "docker-stats": "0.5.0",
-    "dockerode": "2.2.2",
-    "end-of-stream": "1.1.0",
-    "minimist": "1.1.1",
-    "through2": "0.6.5"
+    "docker-allcontainers": "^0.8.0",
+    "docker-event-log": "^0.1.3",
+    "docker-loghose": "^1.6.5",
+    "docker-stats": "^0.9.0",
+    "dockerode": "^3.0.2",
+    "end-of-stream": "^1.4.4",
+    "minimist": "^1.2.0",
+    "through2": "^3.0.1"
   },
   "devDependencies": {
-    "sinon": "7.5.0"
+    "sinon": "^7.5.0",
+    "mocha": "^6.2.2"
   }
 }

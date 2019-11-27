@@ -1,25 +1,24 @@
 NODE_VERSION ?=$(shell grep FROM Dockerfile | cut -d ':' -f 2| cut -d '-' -f 1)
 
-# We support two build modes , node-onbuild or alpine-node
-BUILD_TYPE ?=node-onbuild
+# We support two build modes, node-buster or node-alpine
+BUILD_TYPE ?=node-buster
 
 NAME ?=r7insight_docker
 NAME_BUILD_CONTAINER ?=${NAME}-build-${BUILD_TYPE}
 NAME_TEST_CONTAINER ?=${NAME}-test-${BUILD_TYPE}
-NAME_UNITTEST ?=${NAME}-unittest
 NAME_EXPORT_CONTAINER ?=${NAME}-export-${BUILD_TYPE}
 
 DOCKER_REGISTRY_PREFIX ?=rapid7/${NAME}
 DOCKER_REGISTRY_IMAGE_VERSION ?=$(shell cat VERSION)
 
-# Use the alpine node
-ifeq (${BUILD_TYPE},alpine-node)
-	DOCKERFILE_SUFFIX ?=.alpine
-	DOCKER_REGISTRY_IMAGE_TAG_PREFIX ?=-alpine
+# Use node-alpine
+ifeq (${BUILD_TYPE},node-alpine)
+	DOCKERFILE_PREFIX ?=alpine.
+	DOCKER_REGISTRY_IMAGE_TAG_POSTFIX ?=-alpine
 endif
 
-# Just a random token
-LOG_TOKEN ?=XAXAXAXAXA
+# Random token
+LOG_TOKEN ?=TNETENNBA
 WAIT_TIME ?=5
 
 .PHONY: default build unit-test start-test test tag push publish bump-major \
@@ -29,12 +28,10 @@ default: help
 build: ## Builds a new Docker image
 	@echo "[build] Build type: ${BUILD_TYPE}"
 	@echo "[build] Building new image"
-	docker build --rm=true --tag="${NAME_BUILD_CONTAINER}" -f "Dockerfile${DOCKERFILE_SUFFIX}" .
+	docker build --rm -t "${NAME_BUILD_CONTAINER}" -f "${DOCKERFILE_PREFIX}Dockerfile" .
 
 unit-test: ## Run the unit tests
-	@echo "[test] Building and running unit tests"
-	@docker build -t "${NAME_UNITTEST}" -f tests/Dockerfile .
-	@docker run --rm --name "${NAME_UNITTEST}" "${NAME_UNITTEST}"
+	@npm test
 
 start-test: ## Tests a previous build Docker image to see if starts
 	@echo "[test] Removing existing test container if any"
@@ -43,7 +40,7 @@ start-test: ## Tests a previous build Docker image to see if starts
 	@#	Ensure Docker image exists
 	@docker images | grep -q "${NAME_BUILD_CONTAINER}" || \
 		(echo "[test] Docker image not found, running 'make build'" && make build)
-	@docker run -d --name="${NAME_TEST_CONTAINER}" \
+	@docker run -d --name "${NAME_TEST_CONTAINER}" \
 		-v /var/run/docker.sock:/var/run/docker.sock --read-only --security-opt=no-new-privileges \
        	"${NAME_BUILD_CONTAINER}" -t "${LOG_TOKEN}" -r us -a host="${NAME_TEST_CONTAINER}" &>/dev/null
 	@echo "[test] Testing if the container stays running"
@@ -60,12 +57,12 @@ start-test: ## Tests a previous build Docker image to see if starts
 test: unit-test start-test ## Run all tests
 
 tag: ## Tags local build image to make it ready for push to Docker registry
-	docker tag "$(shell docker images -q ${NAME_BUILD_CONTAINER})" "${DOCKER_REGISTRY_PREFIX}:${DOCKER_REGISTRY_IMAGE_VERSION}${DOCKER_REGISTRY_IMAGE_TAG_PREFIX}"
-	docker tag "$(shell docker images -q ${NAME_BUILD_CONTAINER})" "${DOCKER_REGISTRY_PREFIX}:latest${DOCKER_REGISTRY_IMAGE_TAG_PREFIX}"
+	docker tag "$(shell docker images -q ${NAME_BUILD_CONTAINER})" "${DOCKER_REGISTRY_PREFIX}:${DOCKER_REGISTRY_IMAGE_VERSION}${DOCKER_REGISTRY_IMAGE_TAG_POSTFIX}"
+	docker tag "$(shell docker images -q ${NAME_BUILD_CONTAINER})" "${DOCKER_REGISTRY_PREFIX}:latest${DOCKER_REGISTRY_IMAGE_TAG_POSTFIX}"
 
 push: ## Push local versioned and latest images to the Docker registry
-	docker push "${DOCKER_REGISTRY_PREFIX}:${DOCKER_REGISTRY_IMAGE_VERSION}${DOCKER_REGISTRY_IMAGE_TAG_PREFIX}"
-	docker push "${DOCKER_REGISTRY_PREFIX}:latest${DOCKER_REGISTRY_IMAGE_TAG_PREFIX}"
+	docker push "${DOCKER_REGISTRY_PREFIX}:${DOCKER_REGISTRY_IMAGE_VERSION}${DOCKER_REGISTRY_IMAGE_TAG_POSTFIX}"
+	docker push "${DOCKER_REGISTRY_PREFIX}:latest${DOCKER_REGISTRY_IMAGE_TAG_POSTFIX}"
 
 publish: ## Publish npm package
 	npm publish
@@ -76,7 +73,7 @@ bump-major: ## Bump the major version (1.0.0 -> 2.0.0)
 	@#	Don't add git tag and commit
 	@npm version --no-git-tag-version major
 	@echo "New version: ${DOCKER_REGISTRY_IMAGE_VERSION}"
-	@git add VERSION package.json
+	@git add VERSION package.json package-lock.json
 	@git commit -m "Bump version to ${DOCKER_REGISTRY_IMAGE_VERSION}"
 	@git tag -a "${DOCKER_REGISTRY_IMAGE_VERSION}" -m "Releasing version ${DOCKER_REGISTRY_IMAGE_VERSION}"
 
@@ -86,7 +83,7 @@ bump-minor: ## Bump the minor version (0.1.0 -> 0.2.0)
 	@#	Don't add git tag and commit
 	@npm version --no-git-tag-version minor
 	@echo "New version: ${DOCKER_REGISTRY_IMAGE_VERSION}"
-	@git add VERSION package.json
+	@git add VERSION package.json package-lock.json
 	@git commit -m "Bump version to ${DOCKER_REGISTRY_IMAGE_VERSION}"
 	@git tag -a "${DOCKER_REGISTRY_IMAGE_VERSION}" -m "Releasing version ${DOCKER_REGISTRY_IMAGE_VERSION}"
 
@@ -96,7 +93,7 @@ bump-patch: ## Bump the patch version (0.0.1 -> 0.0.2)
 	@#	Don't add git tag and commit
 	@npm version --no-git-tag-version patch
 	@echo "New version: ${DOCKER_REGISTRY_IMAGE_VERSION}"
-	@git add VERSION package.json
+	@git add VERSION package.json package-lock.json
 	@git commit -m "Bump version to ${DOCKER_REGISTRY_IMAGE_VERSION}"
 	@git tag -a "${DOCKER_REGISTRY_IMAGE_VERSION}" -m "Releasing version ${DOCKER_REGISTRY_IMAGE_VERSION}"
 
@@ -105,20 +102,20 @@ export: ## Export the build as a tarball
 	@docker images | grep -q "${NAME_BUILD_CONTAINER}" || \
 		(echo "[test] Docker image not found, running 'make build'" && make build)
 	docker create --name "${NAME_EXPORT_CONTAINER}" "${NAME_BUILD_CONTAINER}"
-	docker export -o "${NAME}-${DOCKER_REGISTRY_IMAGE_VERSION}${DOCKER_REGISTRY_IMAGE_TAG_PREFIX}.tar" `docker ps -a -q -f 'name=${NAME_EXPORT_CONTAINER}'`
+	docker export -o "${NAME}-${DOCKER_REGISTRY_IMAGE_VERSION}${DOCKER_REGISTRY_IMAGE_TAG_POSTFIX}.tar" `docker ps -a -q -f 'name=${NAME_EXPORT_CONTAINER}'`
 
 clean: ## Remove Docker images from build and tag commands
 	@#	This expands to 3 images, build, latest versioned (0.9.0) and latest
-	-docker image rm "${NAME_BUILD_CONTAINER}" ${DOCKER_REGISTRY_PREFIX}:{${DOCKER_REGISTRY_IMAGE_VERSION},latest}${DOCKER_REGISTRY_IMAGE_TAG_PREFIX} \
+	-docker image rm "${NAME_BUILD_CONTAINER}" ${DOCKER_REGISTRY_PREFIX}:{${DOCKER_REGISTRY_IMAGE_VERSION},latest}${DOCKER_REGISTRY_IMAGE_TAG_POSTFIX} \
                      "${NAME_UNITTEST}"
 
 help: ## Shows help
 	@echo "================================================================================================="
 	@echo "support build types are:"
-	@echo "- BUILD_TYPE=node-onbuild (default)"
-	@echo "- BUILD_TYPE=alpine-node"
+	@echo "- BUILD_TYPE=node-buster (default)"
+	@echo "- BUILD_TYPE=node-alpine"
 	@echo ""
-	@echo "set the environment accordingly to change the build type"
+	@echo "set the environment variable accordingly to change the build type"
 	@echo "================================================================================================="
 	@IFS=$$'\n' ; \
     help_lines=(`fgrep -h "##" ${MAKEFILE_LIST} | fgrep -v fgrep | sed -e 's/\\$$//'`); \
