@@ -10,6 +10,10 @@ You can download the community pack created by InsightOps at [Docker pack](https
 
 ## Usage as a Container
 
+If you are using this container in production please ensure that you pin the version of the image.  
+Rather than using `rapid7/r7insight_docker:latest`, use for example `rapid7/r7insight_docker:3.0.0` since `latest` might pull in breaking changes.  
+You can see the the available versions [here](https://hub.docker.com/r/rapid7/r7insight_docker/tags).  
+
 The simplest way to forward all your container's log to the Rapid7 Insight Platform is to
 run this repository as a container, with:
 
