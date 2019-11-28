@@ -39,10 +39,10 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock \
 ```
 
 You can supply log, stats and event tokens using environment variables:
-`INSIGHT_LOGSTOKEN`: Log token for logs
-`INSIGHT_STATSTOKEN`: Log token for stats
-`INSIGHT_EVENTSTOKEN`: Log token for events
-`INSIGHT_TOKEN`: Log token which is used for the above tokens if one is not provided. (You can only supply this token and it'll be used for logs, stats and events)  
+- `INSIGHT_LOGSTOKEN`: Log token for logs
+- `INSIGHT_STATSTOKEN`: Log token for stats
+- `INSIGHT_EVENTSTOKEN`: Log token for events
+- `INSIGHT_TOKEN`: Log token which is used for the above tokens if one is not provided. (You can only supply this token and it'll be used for logs, stats and events)
 
 The `--read-only` docker flag specifies that the container file system will be read-only.
 This is not a requirement but since currently there's no need for writing, it makes the container more secure.
