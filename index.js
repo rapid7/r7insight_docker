@@ -2,28 +2,44 @@
 
 'use strict';
 
-var tls = require('tls');
-var net = require('net');
-var eos = require('end-of-stream');
-var through = require('through2');
-var minimist = require('minimist');
-var allContainers = require('docker-allcontainers');
-var statsFactory = require('docker-stats');
-var logFactory = require('docker-loghose');
-var eventsFactory = require('docker-event-log');
-var os = require('os');
+const tls = require('tls');
+const net = require('net');
+const eos = require('end-of-stream');
+const through = require('through2');
+const minimist = require('minimist');
+const allContainers = require('docker-allcontainers');
+const statsFactory = require('docker-stats');
+const logFactory = require('docker-loghose');
+const eventsFactory = require('docker-event-log');
+const os = require('os');
+
+let debugLogging = !!process.env.INSIGHT_DOCKER_DEBUG;
+
+const logDebug = (...args) => {
+  if (!debugLogging) {
+    return;
+  }
+
+  console.log(...args);
+};
 
 function connect(opts) {
-  var stream;
+  let stream;
+  const endpoint = `${opts.region}${opts.server}`;
   if (opts.secure) {
-    stream = tls.connect(opts.port, opts.region + opts.server, onSecure);
+    logDebug(`Establishing secure connection to ${endpoint}:${opts.port}...`);
+    stream = tls.connect(opts.port, endpoint, onSecure);
   } else {
-    stream = net.createConnection(opts.port, opts.region + opts.server);
+    logDebug(`Establishing plain-text connection to ${endpoint}:${opts.port}...`);
+    stream = net.createConnection(opts.port, endpoint);
   }
 
   function onSecure() {
     // let's just crash if we are not secure
-    if (!stream.authorized) throw new Error('secure connection not authorized');
+    if (!stream.authorized) {
+      logDebug('Connection is not secure!');
+      throw new Error('secure connection not authorized');
+    }
   }
 
   return stream;
@@ -31,62 +47,74 @@ function connect(opts) {
 
 
 function start(opts) {
+  debugLogging = opts.debug;
+  const logsToken = opts.logstoken || opts.token;
+  const statsToken = opts.statstoken || opts.token;
+  const eventsToken = opts.eventstoken || opts.token;
+  let out;
+  let noRestart = () => void 0;
 
-  var logsToken = opts.logstoken || opts.token;
-  var statsToken = opts.statstoken || opts.token;
-  var eventsToken = opts.eventstoken || opts.token;
-  var out;
-  var noRestart = function() {};
+  const filter = through.obj(function (obj, enc, cb) {
+    logDebug(`Got an event with encoding "${enc}":`, obj);
 
-  var filter = through.obj(function(obj, enc, cb) {
-    addAll(opts.add, obj);
-    var token = '';
+    obj = addAll(opts.add, obj);
+    const token = (() => {
+      const {
+        line,
+        type,
+        stats
+      } = obj;
 
-    if (obj.line) {
-      token = logsToken;
-    }
-    else if (obj.type) {
-      token = eventsToken;
-    }
-    else if (obj.stats) {
-      token = statsToken;
-    }
+      if (line) {
+        logDebug('Using logs token:', logsToken);
+        return logsToken;
+      } else if (type) {
+        logDebug('Using events token:', eventsToken);
+        return eventsToken;
+      } else if (stats) {
+        logDebug('Using stats token:', statsToken);
+        return statsToken;
+      }
+
+      throw new Error('Configuration did not result in a log token being set.');
+    })();
 
     if (token) {
+      logDebug('Prepending log token:', token);
+
       this.push(token);
       this.push(' ');
       this.push(JSON.stringify(obj));
       this.push('\n');
     }
 
-    cb()
+    logDebug('Finished processing event:', obj);
+    cb();
   });
 
-  var events = allContainers(opts);
-  var loghose;
-  var stats;
-  var dockerEvents;
-  var streamsOpened = 0;
-
+  const events = allContainers(opts);
+  let streamsOpened = 0;
   opts.events = events;
 
-  if (opts.logs !== false && logsToken) {
-    loghose = logFactory(opts);
-    loghose.pipe(filter);
-    streamsOpened++;
-  }
+  const createLogHose = (condition, factory) => {
+    logDebug('Creating log stream with factory:', factory);
+    if (!condition()) {
+      logDebug('Condition for log stream creation not met:', String(condition));
+      return;
+    }
 
-  if (opts.stats !== false && statsToken) {
-    stats = statsFactory(opts);
-    stats.pipe(filter);
+    const hose = factory(opts);
+    hose.pipe(filter);
     streamsOpened++;
-  }
 
-  if (opts.dockerEvents !== false && eventsToken) {
-    dockerEvents = eventsFactory(opts);
-    dockerEvents.pipe(filter);
-    streamsOpened++;
-  }
+    logDebug('Log stream created');
+
+    return hose;
+  };
+
+  const loghose = createLogHose(() => opts.logs !== false && logsToken, logFactory);
+  const stats = createLogHose(() => opts.stats !== false && statsToken, statsFactory);
+  const dockerEvents = createLogHose(() => opts.dockerEvents !== false && eventsToken, eventsFactory);
 
   if (!stats && !loghose && !dockerEvents) {
     throw new Error(`You should enable either stats, logs or dockerEvents, \
@@ -96,15 +124,18 @@ this might be due to missing log token.`);
   pipe();
 
   // destroy out if all streams are destroyed
-  loghose && eos(loghose, function() {
+  loghose && eos(loghose, () => {
+    logDebug('Closing log stream');
     streamsOpened--;
     streamClosed(streamsOpened);
   });
-  stats && eos(stats, function() {
+  stats && eos(stats, () => {
+    logDebug('Closing stats log stream');
     streamsOpened--;
     streamClosed(streamsOpened);
   });
-  dockerEvents && eos(dockerEvents, function() {
+  dockerEvents && eos(dockerEvents, () => {
+    logDebug('Closing Docker events log stream');
     streamsOpened--;
     streamClosed(streamsOpened);
   });
@@ -112,17 +143,25 @@ this might be due to missing log token.`);
   return loghose;
 
   function addAll(proto, obj) {
-    if (!proto) { return; }
+    if (!proto) {
+      return;
+    }
 
-    var key;
-    for (key in proto) {
+    const newObj = {...obj};
+
+    for (const key in proto) {
       if (proto.hasOwnProperty(key)) {
-        obj[key] = proto[key];
+        logDebug(`Adding key "${key}" with value "${proto[key]}"`);
+        newObj[key] = proto[key];
       }
     }
+
+    return newObj;
   }
 
   function pipe() {
+    logDebug('Starting data pipe...');
+
     if (out) {
       filter.unpipe(out);
     }
@@ -137,17 +176,15 @@ this might be due to missing log token.`);
 
   function streamClosed(streamsOpened) {
     if (streamsOpened <= 0) {
-      noRestart()
+      noRestart();
       out.destroy();
     }
   }
 }
 
-var unbound;
-
 function cli(process_args) {
-  var argv = minimist(process_args.slice(2), {
-    boolean: ['json', 'secure', 'stats', 'logs', 'dockerEvents'],
+  const argv = minimist(process_args.slice(2), {
+    boolean: ['json', 'secure', 'stats', 'logs', 'dockerEvents', 'debug'],
     string: ['token', 'region', 'logstoken', 'statstoken', 'eventstoken', 'server', 'port'],
     alias: {
       'token': 't',
@@ -159,7 +196,8 @@ function cli(process_args) {
       'secure': 's',
       'json': 'j',
       'statsinterval': 'i',
-      'add': 'a'
+      'add': 'a',
+      'debug': 'd'
     },
     default: {
       json: false,
@@ -170,16 +208,15 @@ function cli(process_args) {
       dockerEvents: true,
       statsinterval: 30,
       add: [ 'host=' + os.hostname() ],
+      debug: !!process.env.INSIGHT_DOCKER_DEBUG,
       token: process.env.INSIGHT_TOKEN,
       logstoken: process.env.INSIGHT_LOGSTOKEN || process.env.INSIGHT_TOKEN,
       statstoken: process.env.INSIGHT_STATSTOKEN || process.env.INSIGHT_TOKEN,
       eventstoken: process.env.INSIGHT_EVENTSTOKEN || process.env.INSIGHT_TOKEN,
       server: '.data.logs.insight.rapid7.com',
-      port: unbound
+      port: undefined
     }
   });
-
-
 
   if (argv.help || !(argv.token || argv.logstoken || argv.statstoken || argv.eventstoken) || !(argv.region)) {
     console.log('Usage: r7insight_docker [-l LOGSTOKEN] [-k STATSTOKEN] [-e EVENTSTOKEN]\n' +
@@ -190,31 +227,35 @@ function cli(process_args) {
                 '                         [--matchByImage REGEXP] [--matchByName REGEXP]\n' +
                 '                         [--skipByImage REGEXP] [--skipByName REGEXP]\n' +
                 '                         [--server HOSTNAME] [--port PORT]\n' +
+                '                         [--debug]\n' +
                 '                         [--help]');
 
     process.exit(1);
   }
 
-  if (argv.port == unbound) {
-    if (argv.secure) {
-      argv.port = 443;
-    } else {
-      argv.port = 80;
-    }
-  } else {
-      argv.port = parseInt(argv.port);
-      // TODO: support service names
-      if (isNaN(argv.port)) {
-        console.log('port must be a number');
-        process.exit(1);
+  const getPort = () => {
+    if (argv.port == undefined) {
+      if (argv.secure) {
+        return 443;
       }
+
+      return 80;
+    }
+
+    // TODO: support service names
+
+    return parseInt(argv.port);
+  };
+  argv.port = getPort();
+  if (isNaN(argv.port)) {
+    console.log('port must be a number');
+    process.exit(1);
   }
 
   if (argv.add && !Array.isArray(argv.add)) {
     argv.add = [argv.add];
   }
-
-  argv.add = argv.add.reduce(function(acc, arg) {
+  argv.add = argv.add.reduce((acc, arg) => {
     arg = arg.split('=');
     acc[arg[0]] = arg[1];
     return acc
@@ -223,13 +264,14 @@ function cli(process_args) {
   utils.start(argv);
 }
 
-var utils = {
-  start: start,
-}
+const utils = {
+  start,
+};
+
 module.exports = {
-  cli: cli,
-  utils: utils,
-}
+  cli,
+  utils,
+};
 
 if (require.main === module) {
   cli(process.argv);
