@@ -99,7 +99,7 @@ function start(opts) {
   const createLogHose = (condition, factory) => {
     logDebug('Creating log stream with factory:', factory);
     if (!condition()) {
-      logDebug('Condition for log stream creation not met:', condition);
+      logDebug('Condition for log stream creation not met:', String(condition));
       return;
     }
 
