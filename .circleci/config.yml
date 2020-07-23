@@ -1,0 +1,17 @@
+version: 2.1
+
+orbs:
+  docker: circleci/docker@1.2.1
+
+workflows:
+  version: 2
+  build-and-publish-docker-image:
+    jobs:
+      - docker/publish:
+          context: docker-publishing
+          image: foodlestech/r7insight_docker
+          tag: develop
+          filters:
+            branches:
+              only:
+                - develop
