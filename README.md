@@ -41,7 +41,9 @@ You can supply the tokens using command line arguments:
 - `--token`: Log token which is used for the above tokens if one is not provided.
   * You can only supply this token and it'll be used for logs, stats and events. 
 
-You can also supply log, stats and event tokens using environment variables:
+You can also supply log, stats and event tokens using environment variables.  
+
+When both command line arguments and environment variables are supplied, the environment variables are used.
 - `INSIGHT_LOGSTOKEN`: Log token for logs
 - `INSIGHT_STATSTOKEN`: Log token for stats
 - `INSIGHT_EVENTSTOKEN`: Log token for events
