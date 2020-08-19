@@ -77,6 +77,9 @@ published. This follows the format `<name>=<value>`.
 
 - `--no-secure` if you want your logs to be sent to the Insight Platform un-encrypted (no TSL/SSL).  
 
+- `--debug` if you want the container to print/log its debug information for trouble-shooting
+  * Can also be enabled by specifying the environment variable `INSIGHT_DOCKER_DEBUG` to a truthy value. E.g. `INSIGHT_DOCKER_DEBUG=1`
+
 
 #### Filtering
 
