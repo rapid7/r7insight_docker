@@ -153,7 +153,7 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock \
 
 ### Running in a restricted environment
 
-Some environments (such as Google Compute Engine) does not allow to access the Docker socket without special privileges.  
+Some environments (such as Google Compute Engine) do not allow to access the Docker socket without special privileges.  
 You will get EACCES(`Error: read EACCES`) error if you try to run the container.  
 To run the container in such environments add `--privileged` to the `docker run` command.
 
@@ -214,7 +214,7 @@ setTimeout(function() {
 
 ### Docker
 
-We currently release the container on two different base's:
+We currently release the container on two different bases:
 - Node on Debian Buster
 - Node on Alpine Linux
 
