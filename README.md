@@ -171,7 +171,7 @@ docker run --privileged \
 
 ```bash
 $ npm install r7insight_docker -g
-$ r7insight_docker -t '$TOKEN' -r '$REGION' -a host="$(uname -n)"
+$ r7insight_docker -t "$TOKEN" -r "$REGION" -a host="$(uname -n)"
 ```
 
 ## Embedded usage
