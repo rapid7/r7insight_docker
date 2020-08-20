@@ -224,8 +224,8 @@ function cli(process_args) {
                 '                         [-r REGION]\n' +
                 '                         [--no-newline] [--no-stats] [--no-logs] [--no-dockerEvents]\n' +
                 '                         [-i STATSINTERVAL] [-a KEY=VALUE]\n' +
-                '                         [--matchByImage REGEXP] [--matchByName REGEXP]\n' +
-                '                         [--skipByImage REGEXP] [--skipByName REGEXP]\n' +
+                '                         [--matchByImage REGEX] [--matchByName REGEX]\n' +
+                '                         [--skipByImage REGEX] [--skipByName REGEX]\n' +
                 '                         [--server HOSTNAME] [--port PORT]\n' +
                 '                         [--debug]\n' +
                 '                         [--help]');
