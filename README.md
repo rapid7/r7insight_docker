@@ -43,11 +43,11 @@ You can supply the tokens using command line arguments:
 
 You can also supply log, stats and event tokens using environment variables.  
 
-When both command line arguments and environment variables are supplied, the environment variables are used.
+When both command line arguments and environment variables are supplied, the command line arguments are used.
 - `INSIGHT_LOGSTOKEN`: Log token for logs
 - `INSIGHT_STATSTOKEN`: Log token for stats
 - `INSIGHT_EVENTSTOKEN`: Log token for events
-- `INSIGHT_TOKEN`: Log token which is used for the above tokens if one is not provided.
+- `INSIGHT_TOKEN`: Log token which is used for any of the above tokens if one is not provided.
   * You can only supply this token and it'll be used for logs, stats and events.
 
 
@@ -67,7 +67,7 @@ published to the Rapid7 Insight Platform every second.
 
 - `--no-logs` if you do not want logs to be published to the Rapid7 Insight Platform.
 
-- `--no-dockerEvents` if you do not want events to be
+- `--no-events` if you do not want events to be
 published to the Rapid7 Insight Platform.
 
 - `-i, --statsinterval <STATSINTERVAL>` downsamples the logs sent to the Rapid7 Insight Platform.  
@@ -79,8 +79,10 @@ published. This follows the format `<name>=<value>`.
 
 - `--no-secure` if you want your logs to be sent to the Insight Platform un-encrypted (no TSL/SSL).  
 
-- `--debug` if you want the container to print/log its debug information for trouble-shooting
-  * Can also be enabled by specifying the environment variable `INSIGHT_DOCKER_DEBUG` to a truthy value. E.g. `INSIGHT_DOCKER_DEBUG=1`
+- `--loggerlevel` to specify the logging level for the r7insight_docker container itself.
+  * Can also be enabled by specifying the environment variable `INSIGHT_LOGGER_LEVEL`
+  E.g. `INSIGHT_LOGGER_LEVEL=info`
+  * By default the logger is silent unless a logger level is defined
 
 
 #### Filtering
