@@ -3,6 +3,8 @@ const chai = require('chai');
 const sinon = require('sinon');
 const util = require('util');
 
+const os = require('os');
+
 const {cli, utils} = require('../index');
 
 
@@ -14,7 +16,7 @@ describe('commander argument parsing', () => {
     it('should have the right default parameters', () => {
         const args = utils.parse_args(['node', 'index.js', '-r', 'eu']);
 
-        assert.deepStrictEqual(args.add, [ 'host=DUB-MBP-6617' ]);
+        assert.deepStrictEqual(args.add, [ 'host=' + os.hostname() ]);
         assert.equal(args.statsinterval, 30);
         assert.equal(args.json, false);
         assert.equal(args.secure, true);
