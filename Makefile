@@ -49,8 +49,6 @@ start-test: ## Tests a previous build Docker image to see if starts
 	@#	If container name doesn't exist, echo, and remove the container
 	@docker ps | grep -q "${NAME_TEST_CONTAINER}" || \
 		(echo "[test] Container exited and failed." && \
-		 (docker rm -f "${NAME_TEST_CONTAINER}" &>/dev/null && \
-		 false))
 	@echo "[test] Cleaning up test container ${NAME_TEST_CONTAINER}"
 	@-docker rm -f "${NAME_TEST_CONTAINER}" &>/dev/null
 
