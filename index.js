@@ -75,8 +75,6 @@ function start(opts) {
         logDebug('Using stats token:', statsToken);
         return statsToken;
       }
-
-      throw new Error('Configuration did not result in a log token being set.');
     })();
 
     if (token) {
