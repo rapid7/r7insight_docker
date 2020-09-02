@@ -49,12 +49,12 @@ function start(opts) {
   let noRestart = () => void 0;
 
   const filter = through.obj(function (obj, enc, cb) {
-    LOGGER.debug(`Got an event with encoding "${enc}"`, obj);
+    LOGGER.debug(`Got an event with encoding "${enc}":`, obj);
 
-    LOGGER.debug('Enriching obj with --add')
+    LOGGER.debug('Enriching log with --add contents')
     obj = addAll(opts.add, obj);
     function addAll(proto, obj) {
-      LOGGER.debug('Checking proto', proto);
+      LOGGER.debug('Checking --add contents:', proto);
       if (!proto) {
         return;
       }
