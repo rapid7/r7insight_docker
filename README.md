@@ -73,9 +73,10 @@ published to the Rapid7 Insight Platform.
 - `-i, --statsinterval <STATSINTERVAL>` downsamples the logs sent to the Rapid7 Insight Platform.  
 It collects samples and averages them before sending.
 
-- `-a/--add` allows you to add fixed values to the data being
+- `-a/--add` allows you to add a fixed value to the data being
 published. This follows the format `<name>=<value>`.
   * If you don't use the `-a` flag, a default value of `host="$(uname -n)"` will be added.
+  * You cannot supply multiple `-a` flags
 
 - `--no-secure` if you want your logs to be sent to the Insight Platform un-encrypted (no TSL/SSL).  
 
