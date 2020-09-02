@@ -17,7 +17,7 @@ const { Command } = require('commander');
 
 
 //  Winston logger initialised after CLI arg parsing
-var LOGGER;
+let LOGGER;
 
 
 function connect(opts) {
