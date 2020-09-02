@@ -9,5 +9,6 @@ WORKDIR /usr/src/app
 COPY package.json index.js VERSION package-lock.json ./
 RUN npm install
 
-ENTRYPOINT ["npm", "run", "start", "--"]
+ENTRYPOINT ["npm", "start", "--"]
+
 CMD []
