@@ -105,7 +105,7 @@ function start(opts) {
 
     LOGGER.debug('Creating hose')
     const hose = factory(opts);
-    LOGGER.debug('Creating pipe')
+    LOGGER.debug('Calling pipe')
     hose.pipe(filter);
     streamsOpened++;
 
@@ -113,14 +113,13 @@ function start(opts) {
     return hose;
   };
 
-  LOGGER.debug('Creating logFactory');
+  LOGGER.debug('Creating log hose');
   const loghose = createLogHose(() => opts.logs !== false, logFactory);
-  LOGGER.debug('Creating statsFactory');
+  LOGGER.debug('Creating statistics hose');
   const statshose = createLogHose(() => opts.stats !== false, statsFactory);
-  LOGGER.debug('Creating eventsFactory');
+  LOGGER.debug('Creating events hose');
   const eventshose = createLogHose(() => opts.events !== false, eventsFactory);
 
-  LOGGER.debug('Creating pipe')
   pipe();
   function pipe() {
     LOGGER.debug('Starting data pipe...');
@@ -133,13 +132,12 @@ function start(opts) {
     LOGGER.debug('Connecting to ingestion');
     out = connect(opts);
 
-    LOGGER.debug('Creating pipe...')
+    LOGGER.debug('Calling filter pipe...')
     filter.pipe(out, { end: false });
 
     LOGGER.debug('Setting noRestart')
     // automatically reconnect on socket failure
     noRestart = eos(out, pipe);
-    LOGGER.debug('Set noRestart')
   }
 
   // destroy out if all streams are destroyed
@@ -160,7 +158,7 @@ function start(opts) {
   });
 
   function streamClosed(streamsOpened) {
-    LOGGER.debug('streamClosed')
+    LOGGER.debug(`Stream closed. ${streamsOpened} streams remain opened.`);
     if (streamsOpened <= 0) {
       noRestart();
       out.destroy();
@@ -270,7 +268,7 @@ server="${args.server}"`)
     throw new Error(`Port must be a number`);
   }
 
-  LOGGER.info('Processing --add flag into valid array');
+  LOGGER.info('Processing --add flag');
   if (args.add && !Array.isArray(args.add)) {
     args.add = [args.add];
   }
@@ -279,6 +277,7 @@ server="${args.server}"`)
     acc[arg[0]] = arg[1];
     return acc
   }, {});
+  LOGGER.debug('Add after processing:', args.add);
 
   utils.start(args);
 }
