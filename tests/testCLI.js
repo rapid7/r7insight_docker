@@ -14,26 +14,26 @@ describe('cli function', () => {
     it('should ensure log token is set if logs are enabled', () => {
         chai.expect(() => {
             cli(['node', 'index.js', '-r', 'eu'])
-        }).to.throw('Logs enabled but no log token!');
+        }).to.throw('Logs enabled but log token not supplied or not valid UUID!');
     });
 
     it('should ensure stats token is set if stats are enabled', () => {
         chai.expect(() => {
-            cli(['node', 'index.js', '-r', 'eu', '--logstoken', 'asd'])
-        }).to.throw('Stats enabled but no stats token!');
+            cli(['node', 'index.js', '-r', 'eu', '--logstoken', '00112233-4455-6677-8899-aabbccddeeff'])
+        }).to.throw('Stats enabled but stats token not supplied or not valid UUID!');
     });
 
     it('should ensure events token is set if events are enabled', () => {
         chai.expect(() => {
-            cli(['node', 'index.js', '-r', 'eu', '--logstoken', 'asd', '--statstoken', 'das good'])
-        }).to.throw('Events enabled but no events token!');
+            cli(['node', 'index.js', '-r', 'eu', '--logstoken', '00112233-4455-6677-8899-aabbccddeeff', '--statstoken', '00112233-4455-6677-8899-aabbccddeeff'])
+        }).to.throw('Events enabled but events token not supplied or not valid UUID!');
     });
 
 
     it("should not crash if log token isn't set if logs are disabled", () => {
         chai.expect(() => {
             cli(['node', 'index.js', '-r', 'eu', '--no-logs'])
-        }).to.not.throw('Logs enabled but no log token!');
+        }).to.not.throw('Logs enabled but log token not supplied or not valid UUID!');
     });
 
     it("should not crash if stats token isn't set if stats are disabled", () => {
@@ -65,10 +65,10 @@ describe('cli function', () => {
         const startFake = sinon.fake();
         sinon.replace(utils, 'start', startFake);
 
-        cli(['node', 'index.js', '-r', 'eu', '-t', 'asd']);
+        cli(['node', 'index.js', '-r', 'eu', '-t', '00112233-4455-6677-8899-aabbccddeeff']);
         assert.equal(startFake.getCall(0).lastArg.port, 443);
 
-        cli(['node', 'index.js', '-r', 'eu', '-t', 'asd', '--no-secure']);
+        cli(['node', 'index.js', '-r', 'eu', '-t', '00112233-4455-6677-8899-aabbccddeeff', '--no-secure']);
         assert.equal(startFake.getCall(1).lastArg.port, 80);
     });
 
@@ -77,11 +77,11 @@ describe('cli function', () => {
         const startFake = sinon.fake();
         sinon.replace(utils, 'start', startFake);
 
-        cli(['node', 'index.js', '-r', 'eu', '-t', 'asd', '--port', '123']);
+        cli(['node', 'index.js', '-r', 'eu', '-t', '00112233-4455-6677-8899-aabbccddeeff', '--port', '123']);
         assert.equal(startFake.getCall(0).lastArg.port, 123);
 
         chai.expect(() => {
-            cli(['node', 'index.js', '-r', 'eu', '-t', 'asd', '--port', 'asd']);
+            cli(['node', 'index.js', '-r', 'eu', '-t', '00112233-4455-6677-8899-aabbccddeeff', '--port', 'asd']);
         }).to.throw(`Port must be a number`);
     });
 });

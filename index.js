@@ -16,6 +16,8 @@ const winston = require('winston');
 const { Command } = require('commander');
 
 
+const UUID_REGEX = /^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/;
+
 //  Winston logger initialised after CLI arg parsing
 let LOGGER;
 
@@ -240,12 +242,12 @@ server="${args.server}"`)
     args.eventstoken = args.eventstoken || args.token;
   }
 
-  if (args.logs && !args.logstoken) {
-    throw new Error('Logs enabled but no log token!');
-  } else if (args.stats && !args.statstoken) {
-    throw new Error('Stats enabled but no stats token!');
-  } else if (args.events && !args.eventstoken) {
-    throw new Error('Events enabled but no events token!');
+  if (args.logs && !UUID_REGEX.test(args.logstoken)) {
+    throw new Error('Logs enabled but log token not supplied or not valid UUID!');
+  } else if (args.stats && !UUID_REGEX.test(args.statstoken)) {
+    throw new Error('Stats enabled but stats token not supplied or not valid UUID!');
+  } else if (args.events && !UUID_REGEX.test(args.eventstoken)) {
+    throw new Error('Events enabled but events token not supplied or not valid UUID!');
   }
 
   const getPort = () => {
