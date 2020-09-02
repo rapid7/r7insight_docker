@@ -23,7 +23,7 @@ describe('commander argument parsing', () => {
         assert.equal(args.eventstoken, undefined);
         assert.equal(args.statstoken, undefined);
         assert.equal(args.token, undefined);
-        assert.equal(args.loggerlevel, undefined);
+        assert.equal(args.logLevel, undefined);
         assert.equal(args.events, true);
         assert.equal(args.logs, true);
         assert.equal(args.stats, true);
@@ -36,7 +36,7 @@ describe('commander argument parsing', () => {
         process.env.INSIGHT_LOGSTOKEN    = 'muh-logs'
         process.env.INSIGHT_STATSTOKEN   = 'muh-stats'
         process.env.INSIGHT_TOKEN        = 'muh-token'
-		process.env.INSIGHT_LOGGER_LEVEL = 'muh-logger'
+		process.env.INSIGHT_LOG_LEVEL = 'muh-logger'
 
         const args = utils.parse_args(['node', 'index.js', '-r', 'eu']);
 
@@ -44,7 +44,7 @@ describe('commander argument parsing', () => {
         assert.equal(args.logstoken, 'muh-logs');
         assert.equal(args.statstoken, 'muh-stats');
         assert.equal(args.token, 'muh-token');
-        assert.equal(args.loggerlevel, 'muh-logger');
+        assert.equal(args.logLevel, 'muh-logger');
 	});
 	
     it('should enforce region flag', () => {
@@ -87,7 +87,7 @@ describe('commander argument parsing', () => {
 		assert.equal(args.logstoken, 'logs');
 		assert.equal(args.statstoken, 'stats');
 		assert.equal(args.token, 'all');
-		assert.equal(args.loggerlevel, 'very_critical');
+		assert.equal(args.logLevel, 'very_critical');
 		assert.equal(args.matchByName, 'match_name');
 		assert.equal(args.matchByImage, 'match_image');
 		assert.equal(args.skipByName, 'skip_name');

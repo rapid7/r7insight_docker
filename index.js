@@ -195,7 +195,7 @@ function parse_args(process_args) {
     .option('-l, --logstoken <LOGS_TOKEN>', 'Specify log token for logs', process.env.INSIGHT_LOGSTOKEN)
     .option('-k, --statstoken <STATS_TOKEN>', 'Specify log token for forwarding statistics', process.env.INSIGHT_STATSTOKEN)
     .option('-t, --token <TOKEN>', 'Specify token to use', process.env.INSIGHT_TOKEN)
-    .option('-v, --loggerlevel <LEVEL>', 'Define application logger level', process.env.INSIGHT_LOGGER_LEVEL)
+    .option('-v, --log-level <LEVEL>', 'Define application logger level', process.env.INSIGHT_LOG_LEVEL)
     .option('--matchByName <REGEX>', 'Forward logs for containers whose name matches <REGEX>')
     .option('--matchByImage <REGEX>', 'Forward logs for containers whose image matches <REGEX>')
     .option('--skipByName <REGEX>', 'Do not forward logs for containers whose name matches <REGEX>')
@@ -216,8 +216,8 @@ function cli(process_args) {
 
   LOGGER = winston.createLogger({
     //  If logger level isn't specified, we are silent
-    silent: !args.loggerlevel,
-    level: args.loggerlevel,
+    silent: !args.logLevel,
+    level: args.logLevel,
     format: winston.format.combine(
        winston.format.simple(),
        winston.format.splat(),
@@ -233,7 +233,7 @@ function cli(process_args) {
 add="${args.add}" \
 statsinterval="${args.statsinterval}" \
 json="${args.json}" \
-loggerlevel="${args.loggerlevel}" \
+loglevel="${args.logLevel}" \
 events="${args.events}" \
 logs="${args.logs}" \
 secure="${args.secure}" \

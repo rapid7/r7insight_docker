@@ -80,9 +80,9 @@ published. This follows the format `<name>=<value>`.
 
 - `--no-secure` if you want your logs to be sent to the Insight Platform un-encrypted (no TSL/SSL).  
 
-- `--loggerlevel` to specify the logging level for the r7insight_docker container itself.
-  * Can also be enabled by specifying the environment variable `INSIGHT_LOGGER_LEVEL`
-  E.g. `INSIGHT_LOGGER_LEVEL=info`
+- `--log-level` to specify the logging level for the r7insight_docker container itself.
+  * Can also be enabled by specifying the environment variable `INSIGHT_LOG_LEVEL`
+  E.g. `INSIGHT_LOG_LEVEL=info`
   * By default the logger is silent unless a logger level is defined
 
 
