@@ -37,7 +37,7 @@ function connect(opts) {
       // let's just crash if we are not secure
       throw new Error('Secure connection is not authorized');
     }
-    LOGGER.info('Connection is secure');
+    LOGGER.debug('Secure connection established');
   }
 
   return stream;
