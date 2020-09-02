@@ -97,7 +97,6 @@ function start(opts) {
   let streamsOpened = 0;
   opts.events = events;
 
-  LOGGER.debug('Creating log hose');
   const createLogHose = (condition, factory) => {
     if (!condition()) {
       LOGGER.debug('Condition for log stream creation not met: ', condition);
