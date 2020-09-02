@@ -53,22 +53,14 @@ function start(opts) {
 
     LOGGER.debug('Enriching log with --add contents')
     obj = addAll(opts.add, obj);
+
     function addAll(proto, obj) {
-      LOGGER.debug('Checking --add contents:', proto);
-      if (!proto) {
-        return;
+      let ret = {
+        ...(obj || {}),
+        ...(proto|| {}),
       }
-  
-      const newObj = {...obj};
-  
-      for (const key in proto) {
-        if (proto.hasOwnProperty(key)) {
-          LOGGER.debug(`Adding key "${key}" value "${proto[key]}"`);
-          newObj[key] = proto[key];
-        }
-      }
-  
-      return newObj;
+      LOGGER.debug('Returning enriched log:', ret);
+      return ret;
     }
 
     LOGGER.debug('Getting correct token for obj...')
