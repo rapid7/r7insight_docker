@@ -88,7 +88,7 @@ function start(opts) {
       this.push('\n');
     }
 
-    LOGGER.debug('Finished processing event, calling callback');
+    LOGGER.debug('Finished processing log message, calling callback...');
     cb();
   });
 
