@@ -126,7 +126,7 @@ function start(opts) {
     LOGGER.debug('Starting data pipe...');
 
     if (out) {
-       LOGGER.debug('Unpiping filter...');
+      LOGGER.debug('Unpiping filter...');
       filter.unpipe(out);
     }
 
