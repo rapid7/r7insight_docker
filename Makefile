@@ -18,7 +18,7 @@ ifeq (${BUILD_TYPE},node-alpine)
 endif
 
 # Random token
-LOG_TOKEN ?=TNETENNBA
+LOG_TOKEN ?=00112233-4455-6677-8899-aabbccddeeff
 WAIT_TIME ?=5
 
 .PHONY: default build unit-test start-test test tag push publish bump-major \
