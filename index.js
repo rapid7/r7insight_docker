@@ -186,7 +186,7 @@ function parse_args(process_args) {
     .option('-l, --logstoken <LOGS_TOKEN>', 'Specify log token for logs', process.env.INSIGHT_LOGSTOKEN)
     .option('-k, --statstoken <STATS_TOKEN>', 'Specify log token for forwarding statistics', process.env.INSIGHT_STATSTOKEN)
     .option('-t, --token <TOKEN>', 'Specify token to use', process.env.INSIGHT_TOKEN)
-    .option('-v, --log-level <LEVEL>', 'Define application logger level', process.env.INSIGHT_LOG_LEVEL)
+    .option('-v, --log-level <LEVEL>', 'Define application logger level', process.env.INSIGHT_LOG_LEVEL || 'info')
     .option('--matchByName <REGEX>', 'Forward logs for containers whose name matches <REGEX>')
     .option('--matchByImage <REGEX>', 'Forward logs for containers whose image matches <REGEX>')
     .option('--skipByName <REGEX>', 'Do not forward logs for containers whose name matches <REGEX>')
@@ -207,7 +207,6 @@ function cli(process_args) {
 
   LOGGER = winston.createLogger({
     //  If logger level isn't specified, we are silent
-    silent: !args.logLevel,
     level: args.logLevel,
     format: winston.format.combine(
        winston.format.simple(),
