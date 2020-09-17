@@ -67,7 +67,7 @@ published to the Rapid7 Insight Platform every second.
 
 - `--no-logs` if you do not want logs to be published to the Rapid7 Insight Platform.
 
-- `--no-events` if you do not want events to be
+- `--no-docker-events` if you do not want events to be
 published to the Rapid7 Insight Platform.
 
 - `-i, --statsinterval <STATSINTERVAL>` downsamples the logs sent to the Rapid7 Insight Platform.  

@@ -97,7 +97,7 @@ function start(opts) {
   LOGGER.debug('Getting all containers events...')
   const events = allContainers(opts);
   let streamsOpened = 0;
-  opts.events = events;
+  opts.dockerEvents = events;
 
   const createLogHose = (condition, factory) => {
     if (!condition()) {
@@ -120,7 +120,7 @@ function start(opts) {
   LOGGER.debug('Creating statistics hose');
   const statshose = createLogHose(() => opts.stats !== false, statsFactory);
   LOGGER.debug('Creating events hose');
-  const eventshose = createLogHose(() => opts.events !== false, eventsFactory);
+  const eventshose = createLogHose(() => opts.dockerEvents !== false, eventsFactory);
 
   pipe();
   function pipe() {
@@ -191,7 +191,7 @@ function parse_args(process_args) {
     .option('--matchByImage <REGEX>', 'Forward logs for containers whose image matches <REGEX>')
     .option('--skipByName <REGEX>', 'Do not forward logs for containers whose name matches <REGEX>')
     .option('--skipByImage <REGEX>', 'Do not forward logs for containers whose image matches <REGEX>')
-    .option('--no-events', 'Do not stream Docker events')
+    .option('--no-docker-events', 'Do not stream Docker events')
     .option('--no-logs', 'Do not stream logs')
     .option('--no-stats', 'Do not stream statistics')
     .option('--no-secure', 'Send logs un-encrypted; no TSL/SSL')
@@ -220,19 +220,9 @@ function cli(process_args) {
  
   LOGGER.info('Starting...');
 
-  LOGGER.debug(`Initial configuration. region="${args.region}" \
-add="${args.add}" \
-statsinterval="${args.statsinterval}" \
-json="${args.json}" \
-loglevel="${args.logLevel}" \
-events="${args.events}" \
-logs="${args.logs}" \
-secure="${args.secure}" \
-stats="${args.stats}" \
-port="${args.port}" \
-server="${args.server}"`)
+  LOGGER.debug('Initial configuration:', args);
 
-  if (!(args.logs || args.stats || args.events)) {
+  if (!(args.logs || args.stats || args.dockerEvents)) {
     throw new Error('You need to enable either logs, stats or events.');
   }
 
@@ -246,7 +236,7 @@ server="${args.server}"`)
     throw new Error('Logs enabled but log token not supplied or not valid UUID!');
   } else if (args.stats && !UUID_REGEX.test(args.statstoken)) {
     throw new Error('Stats enabled but stats token not supplied or not valid UUID!');
-  } else if (args.events && !UUID_REGEX.test(args.eventstoken)) {
+  } else if (args.dockerEvents && !UUID_REGEX.test(args.eventstoken)) {
     throw new Error('Events enabled but events token not supplied or not valid UUID!');
   }
 

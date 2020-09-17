@@ -24,7 +24,7 @@ describe('commander argument parsing', () => {
         assert.equal(args.statstoken, undefined);
         assert.equal(args.token, undefined);
         assert.equal(args.logLevel, undefined);
-        assert.equal(args.events, true);
+        assert.equal(args.dockerEvents, true);
         assert.equal(args.logs, true);
         assert.equal(args.stats, true);
         assert.equal(args.port, undefined);
@@ -72,7 +72,7 @@ describe('commander argument parsing', () => {
 									   '--matchByImage', 'match_image',
 									   '--skipByName', 'skip_name',
 									   '--skipByImage', 'skip_image',
-									   '--no-events',
+									   '--no-docker-events',
 									   '--no-logs',
 									   '--no-stats',
 									   '--no-secure',
@@ -92,7 +92,7 @@ describe('commander argument parsing', () => {
 		assert.equal(args.matchByImage, 'match_image');
 		assert.equal(args.skipByName, 'skip_name');
 		assert.equal(args.skipByImage, 'skip_image');
-		assert(!args.events);
+		assert(!args.dockerEvents);
 		assert(!args.stats);
 		assert(!args.logs);
 		assert(!args.secure);

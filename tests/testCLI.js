@@ -44,7 +44,7 @@ describe('cli function', () => {
 
     it("should not crash events token isn't set if events are disabled", () => {
         chai.expect(() => {
-            cli(['node', 'index.js', '-r', 'eu', '--no-logs', '--no-stats', '--no-events'])
+            cli(['node', 'index.js', '-r', 'eu', '--no-logs', '--no-stats', '--no-docker-events'])
         }).to.not.throw('Events enabled but no events token!');
     });
 
@@ -55,7 +55,7 @@ describe('cli function', () => {
                        '-r', 'eu',
                        '--no-logs',
                        '--no-stats',
-                       '--no-events',
+                       '--no-docker-events',
             ])
         }).to.throw('You need to enable either logs, stats or events.');
     });
