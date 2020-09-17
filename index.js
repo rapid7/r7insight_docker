@@ -247,7 +247,7 @@ function cli(process_args) {
       return 80;
     }
 
-    // TODO (@rjacobs-r7): support service names
+    // TODO: support service names
 
     return parseInt(args.port);
   };
