@@ -23,7 +23,7 @@ describe('commander argument parsing', () => {
         assert.equal(args.eventstoken, undefined);
         assert.equal(args.statstoken, undefined);
         assert.equal(args.token, undefined);
-        assert.equal(args.logLevel, undefined);
+        assert.equal(args.logLevel, 'info');
         assert.equal(args.dockerEvents, true);
         assert.equal(args.logs, true);
         assert.equal(args.stats, true);
