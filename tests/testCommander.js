@@ -1,5 +1,4 @@
 const assert = require('assert');
-const chai = require('chai');
 const sinon = require('sinon');
 const util = require('util');
 
@@ -17,17 +16,17 @@ describe('commander argument parsing', () => {
         const args = utils.parse_args(['node', 'index.js', '-r', 'eu']);
 
         assert.deepStrictEqual(args.add, [ 'host=' + os.hostname() ]);
-        assert.equal(args.statsinterval, 30);
-        assert.equal(args.json, false);
-        assert.equal(args.secure, true);
-        assert.equal(args.eventstoken, undefined);
-        assert.equal(args.statstoken, undefined);
-        assert.equal(args.token, undefined);
-        assert.equal(args.logLevel, 'info');
-        assert.equal(args.dockerEvents, true);
-        assert.equal(args.logs, true);
-        assert.equal(args.stats, true);
-        assert.equal(args.port, undefined);
+        assert.strictEqual(args.statsinterval, 30);
+        assert.strictEqual(args.json, false);
+        assert.strictEqual(args.secure, true);
+        assert.strictEqual(args.eventstoken, undefined);
+        assert.strictEqual(args.statstoken, undefined);
+        assert.strictEqual(args.token, undefined);
+        assert.strictEqual(args.logLevel, 'info');
+        assert.strictEqual(args.dockerEvents, true);
+        assert.strictEqual(args.logs, true);
+        assert.strictEqual(args.stats, true);
+        assert.strictEqual(args.port, undefined);
 	});
 
 	it('should have the right default parameters if ENV variables are specified', () => {
@@ -40,11 +39,11 @@ describe('commander argument parsing', () => {
 
         const args = utils.parse_args(['node', 'index.js', '-r', 'eu']);
 
-        assert.equal(args.eventstoken, 'muh-events');
-        assert.equal(args.logstoken, 'muh-logs');
-        assert.equal(args.statstoken, 'muh-stats');
-        assert.equal(args.token, 'muh-token');
-        assert.equal(args.logLevel, 'muh-logger');
+        assert.strictEqual(args.eventstoken, 'muh-events');
+        assert.strictEqual(args.logstoken, 'muh-logs');
+        assert.strictEqual(args.statstoken, 'muh-stats');
+        assert.strictEqual(args.token, 'muh-token');
+        assert.strictEqual(args.logLevel, 'muh-logger');
 	});
 	
     it('should enforce region flag', () => {
@@ -79,24 +78,24 @@ describe('commander argument parsing', () => {
 									   '--port', '8080',
 									   '--server', 'not-a-scam.com',
 									]);
-		assert.equal(args.region, 'us');
-		assert.equal(args.add, 'my_name=jeff');
-		assert.equal(args.statsinterval, '9000');
+		assert.strictEqual(args.region, 'us');
+		assert.strictEqual(args.add, 'my_name=jeff');
+		assert.strictEqual(args.statsinterval, '9000');
 		assert(args.json);
-		assert.equal(args.eventstoken, 'events');
-		assert.equal(args.logstoken, 'logs');
-		assert.equal(args.statstoken, 'stats');
-		assert.equal(args.token, 'all');
-		assert.equal(args.logLevel, 'very_critical');
-		assert.equal(args.matchByName, 'match_name');
-		assert.equal(args.matchByImage, 'match_image');
-		assert.equal(args.skipByName, 'skip_name');
-		assert.equal(args.skipByImage, 'skip_image');
+		assert.strictEqual(args.eventstoken, 'events');
+		assert.strictEqual(args.logstoken, 'logs');
+		assert.strictEqual(args.statstoken, 'stats');
+		assert.strictEqual(args.token, 'all');
+		assert.strictEqual(args.logLevel, 'very_critical');
+		assert.strictEqual(args.matchByName, 'match_name');
+		assert.strictEqual(args.matchByImage, 'match_image');
+		assert.strictEqual(args.skipByName, 'skip_name');
+		assert.strictEqual(args.skipByImage, 'skip_image');
 		assert(!args.dockerEvents);
 		assert(!args.stats);
 		assert(!args.logs);
 		assert(!args.secure);
-		assert.equal(args.port, '8080');
-		assert.equal(args.server, 'not-a-scam.com');
+		assert.strictEqual(args.port, '8080');
+		assert.strictEqual(args.server, 'not-a-scam.com');
 	});
 });

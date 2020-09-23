@@ -1,7 +1,6 @@
 const assert = require('assert');
 const chai = require('chai');
 const sinon = require('sinon');
-const util = require('util');
 
 const {cli, utils} = require('../index');
 
@@ -66,10 +65,10 @@ describe('cli function', () => {
         sinon.replace(utils, 'start', startFake);
 
         cli(['node', 'index.js', '-r', 'eu', '-t', '00112233-4455-6677-8899-aabbccddeeff']);
-        assert.equal(startFake.getCall(0).lastArg.port, 443);
+        assert.strictEqual(startFake.getCall(0).lastArg.port, 443);
 
         cli(['node', 'index.js', '-r', 'eu', '-t', '00112233-4455-6677-8899-aabbccddeeff', '--no-secure']);
-        assert.equal(startFake.getCall(1).lastArg.port, 80);
+        assert.strictEqual(startFake.getCall(1).lastArg.port, 80);
     });
 
     it('should parse port correctly if set', () => {
@@ -78,7 +77,7 @@ describe('cli function', () => {
         sinon.replace(utils, 'start', startFake);
 
         cli(['node', 'index.js', '-r', 'eu', '-t', '00112233-4455-6677-8899-aabbccddeeff', '--port', '123']);
-        assert.equal(startFake.getCall(0).lastArg.port, 123);
+        assert.strictEqual(startFake.getCall(0).lastArg.port, 123);
 
         chai.expect(() => {
             cli(['node', 'index.js', '-r', 'eu', '-t', '00112233-4455-6677-8899-aabbccddeeff', '--port', 'asd']);
