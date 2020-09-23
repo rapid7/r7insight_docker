@@ -97,7 +97,7 @@ function start(opts) {
   LOGGER.debug('Getting all containers events...')
   const events = allContainers(opts);
   let streamsOpened = 0;
-  opts.dockerEvents = events;
+  opts.events = events;
 
   const createLogHose = (condition, factory) => {
     if (!condition()) {
