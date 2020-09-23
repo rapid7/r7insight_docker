@@ -186,12 +186,14 @@ function parse_args(process_args) {
     .option('-l, --logstoken <LOGS_TOKEN>', 'Specify log token for logs', process.env.INSIGHT_LOGSTOKEN)
     .option('-k, --statstoken <STATS_TOKEN>', 'Specify log token for forwarding statistics', process.env.INSIGHT_STATSTOKEN)
     .option('-t, --token <TOKEN>', 'Specify token to use', process.env.INSIGHT_TOKEN)
-    .option('-v, --log-level <LEVEL>', 'Define application logger level', process.env.INSIGHT_LOG_LEVEL || 'info')
+    .option('-v, --log-level <LEVEL>', 'Define application log level', process.env.INSIGHT_LOG_LEVEL || 'info')
+    //  TODO (sbialkowski): Remove in next release
+    .option('--debug', 'DEPRECATED: Set application log level to "debug"', false)
     .option('--matchByName <REGEX>', 'Forward logs for containers whose name matches <REGEX>')
     .option('--matchByImage <REGEX>', 'Forward logs for containers whose image matches <REGEX>')
     .option('--skipByName <REGEX>', 'Do not forward logs for containers whose name matches <REGEX>')
     .option('--skipByImage <REGEX>', 'Do not forward logs for containers whose image matches <REGEX>')
-    .option('--no-docker-events', 'Do not stream Docker events')
+    .option('--no-docker-events, --no-dockerEvents', 'Do not stream Docker events')
     .option('--no-logs', 'Do not stream logs')
     .option('--no-stats', 'Do not stream statistics')
     .option('--no-secure', 'Send logs un-encrypted; no TSL/SSL')
@@ -199,7 +201,13 @@ function parse_args(process_args) {
     .option('--server <SERVER>', 'Specify server to forward logs to', '.data.logs.insight.rapid7.com')
     .parse(process_args);
 
-  return program.opts();
+  //  TODO (sbialkowski): Remove in next release
+  let options = program.opts();
+  if (options.debug) {
+    options.logLevel = 'debug';
+  }
+
+  return options;
 }
 
 function cli(process_args) {
@@ -218,6 +226,16 @@ function cli(process_args) {
   })
  
   LOGGER.info('Starting...');
+
+  //  TODO (sbialkowski): Remove in next release
+  if (process_args.includes('--no-dockerEvents')) {
+    LOGGER.warn(`'--no-dockerEvents' flag has been renamed to '--no-docker-events' \
+and will be removed in the next release. Please update your usage.`);
+  }
+  if (args.debug) {
+    LOGGER.warn(`'--debug' flag has been deprecated in favour of '--log-level debug' \
+and will be removed in the next release. Please update your usage.`);
+  }
 
   LOGGER.debug('Initial configuration:', args);
 
