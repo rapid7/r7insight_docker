@@ -214,7 +214,6 @@ function cli(process_args) {
   let args = parse_args(process_args);
 
   LOGGER = winston.createLogger({
-    //  If logger level isn't specified, we are silent
     level: args.logLevel,
     format: winston.format.combine(
        winston.format.simple(),
