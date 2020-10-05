@@ -7,8 +7,12 @@ RUN apk add --no-cache bash
 ENV NODE_ENV production
 
 WORKDIR /usr/src/app
-COPY package.json index.js VERSION package-lock.json ./
+
+COPY package.json package-lock.json ./
 RUN npm install
 
-ENTRYPOINT ["/usr/src/app/index.js"]
+COPY index.js ./
+
+ENTRYPOINT ["npm", "start", "--"]
+
 CMD []
