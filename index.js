@@ -229,11 +229,11 @@ function cli(process_args) {
   //  TODO (sbialkowski): Remove in next release
   if (process_args.includes('--no-dockerEvents')) {
     LOGGER.warn(`'--no-dockerEvents' flag has been renamed to '--no-docker-events' \
-and will be removed in the next release. Please update your usage.`);
+and may be removed in a next release. Please update your usage.`);
   }
   if (args.debug) {
     LOGGER.warn(`'--debug' flag has been deprecated in favour of '--log-level debug' \
-and will be removed in the next release. Please update your usage.`);
+and may be removed in a next release. Please update your usage.`);
   }
 
   LOGGER.debug('Initial configuration:', args);
