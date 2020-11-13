@@ -87,7 +87,7 @@ function start(opts) {
         LOGGER.debug(`Using stats token: ${opts.statstoken}`);
         return opts.statstoken;
       } else {
-        LOGGER.debug(`Unable to figure out correct token to use, skipping log: ${obj}`);
+        LOGGER.error('Unable to figure out correct token to use, skipping log...');
       }
     })();
 
