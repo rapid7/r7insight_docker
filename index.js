@@ -3,6 +3,7 @@
 'use strict';
 
 const allContainers = require('docker-allcontainers');
+const dns = require('dns');
 const eos = require('end-of-stream');
 const eventsFactory = require('docker-event-log');
 const logFactory = require('docker-loghose');
@@ -24,7 +25,16 @@ let LOGGER;
 
 function connect(opts) {
   let stream;
+
   const endpoint = `${opts.region}${opts.server}`;
+
+  dns.lookup(endpoint, (err, address, family) => {
+    if (!err) {
+      LOGGER.debug(`Successfully resolved DNS. address: "${address}" family: "${family}"`)
+    } else {
+      LOGGER.error(`Failed to resolve DNS. error: ${err}`);
+    }
+  });
 
   if (opts.secure) {
     LOGGER.info(`Establishing secure connection to ${endpoint}:${opts.port}`);
