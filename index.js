@@ -3,6 +3,7 @@
 'use strict';
 
 const allContainers = require('docker-allcontainers');
+const dns = require('dns');
 const eos = require('end-of-stream');
 const eventsFactory = require('docker-event-log');
 const logFactory = require('docker-loghose');
@@ -24,13 +25,22 @@ let LOGGER;
 
 function connect(opts) {
   let stream;
+
   const endpoint = `${opts.region}${opts.server}`;
 
+  dns.lookup(endpoint, (err, address, family) => {
+    if (!err) {
+      LOGGER.debug(`Successfully resolved DNS. address: "${address}" family: "${family}"`)
+    } else {
+      LOGGER.error(`Failed to resolve DNS. error: ${err}`);
+    }
+  });
+
   if (opts.secure) {
-    LOGGER.info(`Establishing secure connection to ${endpoint}:${opts.port}`);
+    LOGGER.info(`Establishing secure connection to "${endpoint}:${opts.port}"`);
     stream = tls.connect(opts.port, endpoint, onSecure);
   } else {
-    LOGGER.info(`Establishing plain-text connection to ${endpoint}:${opts.port}`);
+    LOGGER.info(`Establishing plain-text connection to "${endpoint}:${opts.port}"`);
     stream = net.createConnection(opts.port, endpoint);
   }
 
@@ -68,21 +78,21 @@ function start(opts) {
     LOGGER.debug('Getting correct token for obj...')
     const token = (() => {
       if (obj.line) {
-        LOGGER.debug('Using logs token:', opts.logstoken);
+        LOGGER.debug(`Using logs token: ${opts.logstoken}`);
         return opts.logstoken;
       } else if (obj.type) {
-        LOGGER.debug('Using events token:', opts.eventstoken);
+        LOGGER.debug(`Using events token: ${opts.eventstoken}`);
         return opts.eventstoken;
       } else if (obj.stats) {
-        LOGGER.debug('Using stats token:', opts.statstoken);
+        LOGGER.debug(`Using stats token: ${opts.statstoken}`);
         return opts.statstoken;
       } else {
-        LOGGER.debug('Unable to figure out correct token to use, skipping log', obj);
+        LOGGER.error('Unable to figure out correct token to use, skipping log...');
       }
     })();
 
     if (token) {
-      LOGGER.debug('Stringifying object and prepending log token:', token);
+      LOGGER.debug(`Stringifying object and prepending log token: ${token}`);
 
       this.push(token);
       this.push(' ');
@@ -101,7 +111,7 @@ function start(opts) {
 
   const createLogHose = (condition, factory) => {
     if (!condition()) {
-      LOGGER.debug('Condition for log stream creation not met: ', condition);
+      LOGGER.debug(`Condition for log stream creation not met: ${condition}`);
       return;
     }
 
