@@ -5,7 +5,7 @@ LABEL maintainer="Rapid 7 - InsightOps Team <InsightOpsTeam@rapid7.com>"
 
 ENV NODE_ENV production
 
-RUN apk add bind-tools
+RUN apk add bind-tools bash
 
 WORKDIR /usr/src/app
 
