@@ -5,6 +5,8 @@ LABEL maintainer="Rapid 7 - InsightOps Team <InsightOpsTeam@rapid7.com>"
 
 ENV NODE_ENV production
 
+RUN apk add bind-tools
+
 WORKDIR /usr/src/app
 
 COPY package.json package-lock.json ./
