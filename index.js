@@ -28,7 +28,7 @@ function connect(opts) {
   const endpoint = `${opts.region}${opts.server}`;
 
   dig([endpoint]).then(result => {
-    console.log("Dig was successful!");
+    console.log("Dig222 was successful!");
     dns.lookup(endpoint, (err, address, family) => {
       if (!err) {
         LOGGER.debug(
