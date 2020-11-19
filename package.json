@@ -9,7 +9,7 @@
   "readme": "see [README.md](https://github.com/rapid7/r7insight_docker/blob/master/README.md)",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node index.js -r eu",
     "test": "mocha tests/**/test*.js --reporter spec"
   },
   "engines": {
