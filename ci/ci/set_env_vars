@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+if [ "$CIRCLE_BRANCH" == "master" ]; then
+    echo "export REGION=us-east-1" >> $BASH_ENV
+    echo "export AWS_ACCESS_KEY_ID=$(eval echo $PROD_AWS_ACCESS_KEY_ID)" >> $BASH_ENV
+    echo "export AWS_SECRET_ACCESS_KEY=$(eval echo $PROD_AWS_SECRET_ACCESS_KEY)" >> $BASH_ENV
+    echo "export AWS_ECR_ACCOUNT_URL=987708648443.dkr.ecr.us-east-1.amazonaws.com" >> $BASH_ENV
+elif [ "$CIRCLE_BRANCH" == "dev" ]; then
+    echo "export REGION=us-east-1" >> $BASH_ENV
+    echo "export AWS_ACCESS_KEY_ID=$(eval echo $STG_AWS_ACCESS_KEY_ID)" >> $BASH_ENV
+    echo "export AWS_SECRET_ACCESS_KEY=$(eval echo $STG_AWS_SECRET_ACCESS_KEY)" >> $BASH_ENV
+    echo "export AWS_ECR_ACCOUNT_URL=376823864759.dkr.ecr.us-east-1.amazonaws.com" >> $BASH_ENV
+fi
+

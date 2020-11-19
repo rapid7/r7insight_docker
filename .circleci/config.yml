@@ -1,0 +1,35 @@
+version: 2.1
+orbs:
+  aws-ecr: circleci/aws-ecr@6.7.0
+executors:
+  docker_build:
+    machine:
+      docker_layer_caching: true
+
+jobs:
+  build_docker:
+    docker:
+      - image: circleci/node:jessie
+    steps:
+      - checkout
+      - run:
+          name: 'Set env vars'
+          command: |
+            ./ci/set_env_vars
+            source $BASH_ENV
+      - setup_remote_docker
+      - aws-ecr/build-and-push-image:
+          account-url: AWS_ECR_ACCOUNT_URL
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          region: REGION
+          repo: rapid7insights
+          tag: latest,$CIRCLE_BUILD_NUM
+
+workflows:
+  version: 2
+  create_docker_image:
+    jobs:
+      - build_docker
+
+ 
