@@ -1,12 +1,12 @@
 # r7insight_docker
 
 # FROM node:12.13.0-buster
-FROM node:12.13.0
+FROM node:12.13.0-alpine
 LABEL maintainer="Rapid 7 - InsightOps Team <InsightOpsTeam@rapid7.com>"
 
 ENV NODE_ENV production
 
-# RUN apk add bind-tools bash
+RUN apk add bind-tools bash
 
 WORKDIR /usr/src/app
 
