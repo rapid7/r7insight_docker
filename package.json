@@ -1,6 +1,6 @@
 {
   "name": "r7insight_docker",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "Forward all logs from all running Docker containers to the Rapid7 Insight Platform",
   "repository": {
     "type": "git",
