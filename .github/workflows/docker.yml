@@ -1,0 +1,22 @@
+name: Docker Image Start Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        base-image: [node-alpine, node-buster]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Start Test with base image ${{ matrix.base-image }}
+      run: BUILD_TYPE=${{ matrix.base-image }} make start-test
