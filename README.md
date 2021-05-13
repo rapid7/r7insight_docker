@@ -1,5 +1,3 @@
-[![Travis CI](https://img.shields.io/travis/rapid7/r7insight_docker.svg?style=for-the-badge)](https://travis-ci.org/rapid7/r7insight_docker)
-
 # r7insight_docker
 
 - [r7insight_docker](#r7insight_docker)
@@ -39,9 +37,9 @@ You can supply the tokens using command line arguments:
 - `--statstoken`: Log token for stats
 - `--eventstoken`: Log token for events
 - `--token`: Log token which is used for the above tokens if one is not provided.
-  * You can only supply this token and it'll be used for logs, stats and events. 
+  * You can only supply this token and it'll be used for logs, stats and events.
 
-You can also supply log, stats and event tokens using environment variables.  
+You can also supply log, stats and event tokens using environment variables.
 
 When both command line arguments and environment variables are supplied, the command line arguments are used.
 - `INSIGHT_LOGSTOKEN`: Log token for logs
@@ -62,7 +60,7 @@ E.g. `-r 'eu'`
 ### Optional arguments
 
 - `--no-stats` if you do not want stats to be
-published to the Rapid7 Insight Platform every second.  
+published to the Rapid7 Insight Platform every second.
 **You need this flag for Docker version < 1.5**
 
 - `--no-logs` if you do not want logs to be published to the Rapid7 Insight Platform.
@@ -70,7 +68,7 @@ published to the Rapid7 Insight Platform every second.
 - `--no-docker-events` if you do not want events to be
 published to the Rapid7 Insight Platform.
 
-- `-i, --statsinterval <STATSINTERVAL>` downsamples the logs sent to the Rapid7 Insight Platform.  
+- `-i, --statsinterval <STATSINTERVAL>` downsamples the logs sent to the Rapid7 Insight Platform.
 It collects samples and averages them before sending.
 
 - `-a/--add` allows you to add a fixed value to the data being
@@ -78,7 +76,7 @@ published. This follows the format `<name>=<value>`.
   * If you don't use the `-a` flag, a default value of `host="$(uname -n)"` will be added.
   * You cannot supply multiple `-a` flags
 
-- `--no-secure` if you want your logs to be sent to the Insight Platform un-encrypted (no TSL/SSL).  
+- `--no-secure` if you want your logs to be sent to the Insight Platform un-encrypted (no TSL/SSL).
 
 - `--log-level` to specify the logging level for the r7insight_docker container itself.
   * Can also be enabled by specifying the environment variable `INSIGHT_LOG_LEVEL`
@@ -115,9 +113,9 @@ You can also filter the containers for which logs/stats are forwarded.
 
 The simplest way to forward all your container logs to the Rapid7 Insight Platform is to run this repository as a container.
 
-- If you are using this container in production please ensure that you pin the version of the image.  
+- If you are using this container in production please ensure that you pin the version of the image.
   * Use `rapid7/r7insight_docker:3.1.3` rather than `rapid7/r7insight_docker:latest` since `latest` might pull in breaking changes if a new version is released
-  * You can see the the available versions [here](https://hub.docker.com/r/rapid7/r7insight_docker/tags).  
+  * You can see the the available versions [here](https://hub.docker.com/r/rapid7/r7insight_docker/tags).
 
 
 ### Docker Arguments
@@ -126,9 +124,9 @@ The `--read-only` docker flag specifies that the container file system will be r
 This is not a requirement but since currently there's no need for writing, it makes the container more secure.
 
 The `--security-opt=no-new-privileges` docker flag sets a kernel bit which stops the process or its children
-from gaining additional privileges via setuid or sgid.  
+from gaining additional privileges via setuid or sgid.
 Once again not required, but increases security.
-  
+
 ### Examples
 
 ```bash
@@ -158,8 +156,8 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock \
 
 ### Running in a restricted environment
 
-Some environments (such as Google Compute Engine) do not allow to access the Docker socket without special privileges.  
-You will get EACCES(`Error: read EACCES`) error if you try to run the container.  
+Some environments (such as Google Compute Engine) do not allow to access the Docker socket without special privileges.
+You will get EACCES(`Error: read EACCES`) error if you try to run the container.
 To run the container in such environments add `--privileged` to the `docker run` command.
 
 Example:
@@ -281,3 +279,4 @@ and the stats as a never ending stream of data.
 
 All the originating requests are wrapped in a
 [never-ending-stream](https://github.com/mcollina/never-ending-stream).
+
