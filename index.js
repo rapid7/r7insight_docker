@@ -29,10 +29,11 @@ function connect(opts) {
   const endpoint = `${opts.region}${opts.server}`;
 
   dns.lookup(endpoint, (err, address, family) => {
-    if (!err) {
-      LOGGER.debug(`Successfully resolved DNS. address: "${address}" family: "${family}"`)
+    if (err) {
+      // crash if unable to resolve DNS to avoid possible zombie container
+      throw new Error(`Failed to resolve DNS. error: ${err}`);
     } else {
-      LOGGER.error(`Failed to resolve DNS. error: ${err}`);
+      LOGGER.debug(`Successfully resolved DNS. address: "${address}" family: "${family}"`)
     }
   });
 
@@ -233,7 +234,7 @@ function cli(process_args) {
       new winston.transports.Console(),
     ],
   })
- 
+
   LOGGER.info('Starting...');
 
   //  TODO (sbialkowski): Remove in next release
