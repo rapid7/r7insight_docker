@@ -29,7 +29,7 @@ Mocha will recursively find tests regardless of nested directories in `tests/`.
 
 ## Deployment/Publishing
 
-You should do the following for both the alpine and buster base:
+You should do the following for both the alpine and bullseye base:
 - `export BUILD_TYPE=node-alpine` (for building alpine)
 - `export DOCKER_REGISTRY_PREFIX=<dockerhub-user>/<image-name>` (optional, makefile default is **rapid7/r7insight_docker**)
 - `make build`
