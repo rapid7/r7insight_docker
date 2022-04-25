@@ -19,7 +19,7 @@ const { Command } = require('commander');
 
 const UUID_REGEX = /^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/;
 
-//  Winston logger initialised after CLI arg parsing
+//  Winston logger initialized after CLI arg parsing
 let LOGGER;
 
 
