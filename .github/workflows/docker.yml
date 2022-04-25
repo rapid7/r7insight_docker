@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        base-image: [node-alpine, node-buster]
+        base-image: [node-alpine, node-bullseye]
 
     steps:
     - uses: actions/checkout@v2
