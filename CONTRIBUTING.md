@@ -14,6 +14,7 @@
 
 Once you have finished implementing the desired functionality, you should open a Pull Request on GitHub  
 Once it is approved for merging, you should bump the versioning (this repository uses [SemVer](https://semver.org/)) by running whichever one of the following that makes sense:
+
 - `make bump-major`
 - `make bump-minor`
 - `make bump-patch`
@@ -30,6 +31,7 @@ Mocha will recursively find tests regardless of nested directories in `tests/`.
 ## Deployment/Publishing
 
 You should do the following for both the alpine and bullseye base:
+
 - `export BUILD_TYPE=node-alpine` (for building alpine)
 - `export DOCKER_REGISTRY_PREFIX=<dockerhub-user>/<image-name>` (optional, makefile default is **rapid7/r7insight_docker**)
 - `make build`
@@ -39,7 +41,7 @@ You should do the following for both the alpine and bullseye base:
 - `make clean` (optional for local Docker image cleanup)
 
 You only need to do the following once:
+
 - `make publish` (npm package publish, will require account credentials, update **package.json** if needed)
 
-
-That's it! Keep in mind that if you changed the **README.md** you will also need to update it manually on Docker Hub.  
+That's it! Keep in mind that if you changed the **README.md** you will also need to update it manually on Docker Hub.

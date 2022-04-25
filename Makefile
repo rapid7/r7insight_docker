@@ -1,5 +1,3 @@
-NODE_VERSION ?=$(shell grep FROM Dockerfile | cut -d ':' -f 2| cut -d '-' -f 1)
-
 # We support two build modes, node-bullseye or node-alpine
 BUILD_TYPE ?=node-bullseye
 
