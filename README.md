@@ -38,7 +38,7 @@ You can supply the tokens using command line arguments:
 - `--statstoken`: Log token for stats
 - `--eventstoken`: Log token for events
 - `--token`: Log token which is used for the above tokens if one is not provided.
-  - You can only supply this token and it'll be used for logs, stats and events.
+  - You can supply only this token and it'll be used for logs, stats and events.
 
 You can also supply log, stats and event tokens using environment variables.
 
@@ -115,7 +115,7 @@ You can also filter the containers for which logs/stats are forwarded.
 The simplest way to forward all your container logs to the Rapid7 Insight Platform is to run this repository as a container.
 
 - If you are using this container in production please ensure that you pin the version of the image.
-  - Use `rapid7/r7insight_docker:3.1.3` rather than `rapid7/r7insight_docker:latest` since `latest` might pull in breaking changes if a new version is released
+  - Use `rapid7/r7insight_docker:1.2.3` rather than `rapid7/r7insight_docker:latest` since `latest` might pull in breaking changes if a new version is released
   - You can see the the available versions [here](https://hub.docker.com/r/rapid7/r7insight_docker/tags).
 
 ### Docker Arguments
