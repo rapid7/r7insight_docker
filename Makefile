@@ -1,7 +1,5 @@
-NODE_VERSION ?=$(shell grep FROM Dockerfile | cut -d ':' -f 2| cut -d '-' -f 1)
-
-# We support two build modes, node-buster or node-alpine
-BUILD_TYPE ?=node-buster
+# We support two build modes, node-bullseye or node-alpine
+BUILD_TYPE ?=node-bullseye
 
 NAME ?=r7insight_docker
 NAME_BUILD_CONTAINER ?=${NAME}-build-${BUILD_TYPE}
@@ -112,7 +110,7 @@ clean: ## Remove Docker images from build and tag commands
 help: ## Shows help
 	@echo "================================================================================================="
 	@echo "support build types are:"
-	@echo "- BUILD_TYPE=node-buster (default)"
+	@echo "- BUILD_TYPE=node-bullseye (default)"
 	@echo "- BUILD_TYPE=node-alpine"
 	@echo ""
 	@echo "set the environment variable accordingly to change the build type"

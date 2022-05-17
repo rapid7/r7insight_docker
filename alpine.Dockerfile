@@ -1,7 +1,7 @@
-# r7insight_docker alpine base
+FROM node:16.14.2-alpine3.15
 
-FROM mhart/alpine-node:12.13.0
 LABEL maintainer="Rapid 7 - InsightOps Team <InsightOpsTeam@rapid7.com>"
+
 RUN apk add --no-cache bash
 
 ENV NODE_ENV production

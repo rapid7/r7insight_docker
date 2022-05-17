@@ -98,13 +98,4 @@ describe('commander argument parsing', () => {
 		assert.strictEqual(args.port, '8080');
 		assert.strictEqual(args.server, 'not-a-scam.com');
 	});
-
-	it('should continue supporting deprecated CLI flags', () => {
-		const args = utils.parse_args(['node', 'index.js', '-r', 'us',
-									   '--no-dockerEvents',
-									   '--debug',
-									]);
-		assert(!args.dockerEvents);
-		assert.strictEqual(args.logLevel, 'debug');
-	});
 });

@@ -19,7 +19,7 @@ const { Command } = require('commander');
 
 const UUID_REGEX = /^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/;
 
-//  Winston logger initialised after CLI arg parsing
+//  Winston logger initialized after CLI arg parsing
 let LOGGER;
 
 
@@ -29,10 +29,11 @@ function connect(opts) {
   const endpoint = `${opts.region}${opts.server}`;
 
   dns.lookup(endpoint, (err, address, family) => {
-    if (!err) {
-      LOGGER.debug(`Successfully resolved DNS. address: "${address}" family: "${family}"`)
+    if (err) {
+      // crash if unable to resolve DNS to avoid possible zombie container
+      throw new Error(`Failed to resolve DNS. error: ${err}`);
     } else {
-      LOGGER.error(`Failed to resolve DNS. error: ${err}`);
+      LOGGER.debug(`Successfully resolved DNS. address: "${address}" family: "${family}"`)
     }
   });
 
@@ -197,13 +198,11 @@ function parse_args(process_args) {
     .option('-k, --statstoken <STATS_TOKEN>', 'Specify log token for forwarding statistics', process.env.INSIGHT_STATSTOKEN)
     .option('-t, --token <TOKEN>', 'Specify token to use', process.env.INSIGHT_TOKEN)
     .option('-v, --log-level <LEVEL>', 'Define application log level', process.env.INSIGHT_LOG_LEVEL || 'info')
-    //  TODO (sbialkowski): Remove in next release
-    .option('--debug', 'DEPRECATED: Set application log level to "debug" (use `--log-level debug`)', false)
     .option('--matchByName <REGEX>', 'Forward logs for containers whose name matches <REGEX>')
     .option('--matchByImage <REGEX>', 'Forward logs for containers whose image matches <REGEX>')
     .option('--skipByName <REGEX>', 'Do not forward logs for containers whose name matches <REGEX>')
     .option('--skipByImage <REGEX>', 'Do not forward logs for containers whose image matches <REGEX>')
-    .option('--no-docker-events, --no-dockerEvents', 'Do not stream Docker events')
+    .option('--no-docker-events', 'Do not stream Docker events')
     .option('--no-logs', 'Do not stream logs')
     .option('--no-stats', 'Do not stream statistics')
     .option('--no-secure', 'Send logs un-encrypted; no TSL/SSL')
@@ -211,13 +210,7 @@ function parse_args(process_args) {
     .option('--server <SERVER>', 'Specify server to forward logs to', '.data.logs.insight.rapid7.com')
     .parse(process_args);
 
-  //  TODO (sbialkowski): Remove in next release
-  let options = program.opts();
-  if (options.debug) {
-    options.logLevel = 'debug';
-  }
-
-  return options;
+  return program.opts();
 }
 
 function cli(process_args) {
@@ -233,19 +226,8 @@ function cli(process_args) {
       new winston.transports.Console(),
     ],
   })
- 
+
   LOGGER.info('Starting...');
-
-  //  TODO (sbialkowski): Remove in next release
-  if (process_args.includes('--no-dockerEvents')) {
-    LOGGER.warn(`'--no-dockerEvents' flag has been renamed to '--no-docker-events' \
-and may be removed in a next release. Please update your usage.`);
-  }
-  if (args.debug) {
-    LOGGER.warn(`'--debug' flag has been deprecated in favour of '--log-level debug' \
-and may be removed in a next release. Please update your usage.`);
-  }
-
   LOGGER.debug('Initial configuration:', args);
 
   if (!(args.logs || args.stats || args.dockerEvents)) {
